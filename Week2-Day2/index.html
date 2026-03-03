@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Age Calculator</title>
+  <link href="./src/output.css" rel="stylesheet">
+  <link rel="icon" sizes="32x32" href="./favicon-32x32.png" type="image/png">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center bg-url('./background_image..png')">
+
+<div class="bg-white w-[90%] max-w-xl p-8 md:p-12 
+            rounded-[20px] 
+            rounded-br-[80px] 
+            md:rounded-br-[150px] 
+            shadow-xl mb-[20px]  ">
+     <div class="flex gap-4 md:gap-6 flex-wrap">
+      <div class="flex flex-col flex-1 min-w-0">
+        <label class="text-xs tracking-widest text-gray-500 mb-2">DAY</label>
+        <input id="day" type="number" placeholder="DD"
+          class="border p-3 text-xl font-bold rounded-md focus:outline-none focus:border-purple-600">
+      </div>
+
+      <div class="flex flex-col flex-1 min-w-0">
+        <label class="text-xs tracking-widest text-gray-500 mb-2">MONTH</label>
+        <input id="month" type="number" placeholder="MM"
+          class="border p-3 text-xl font-bold rounded-md focus:outline-none focus:border-purple-600">
+      </div>
+
+      <div class="flex flex-col flex-1 min-w-0">
+        <label class="text-xs tracking-widest text-gray-500 mb-2">YEAR</label>
+        <input id="year" type="number" placeholder="YYYY"
+          class="border p-3 text-xl font-bold rounded-md focus:outline-none focus:border-purple-600">
+      </div>
+    </div>
+
+    <!-- Divider -->
+     <div class="relative my-15">
+      <div class="h-px bg-gray-300"></div>
+     <button onclick="calculateAge()"
+  class="absolute left-1/2 -translate-x-1/2 -top-6
+         md:left-auto md:translate-x-0 md:right-0
+         bg-purple-600 hover:bg-purple-700 transition
+         w-14 h-14 rounded-full
+         flex items-center justify-center">
+  <img src="./icon-arrow.svg" alt="">
+</button>
+    </div> 
+
+    <!-- Result -->
+ <div class="text-4xl md:text-6xl font-extrabold italic">
+      <div><span id="years" class="text-purple-600">--</span> years</div>
+      <div><span id="months" class="text-purple-600">--</span> months</div>
+      <div><span id="days" class="text-purple-600">--</span> days</div>
+    </div>
+
+  </div>
+
+<script>
+function calculateAge() {
+  const day = parseInt(document.getElementById("day").value);
+  const month = parseInt(document.getElementById("month").value) - 1;
+  const year = parseInt(document.getElementById("year").value);
+
+  if (isNaN(day) || isNaN(month) || isNaN(year)) {
+    alert("Please enter valid date");
+    return;
+  }
+
+  const today = new Date();
+  const birthDate = new Date(year, month, day);
+
+  if (birthDate > today) {
+    alert("Date cannot be in the future");
+    return;
+  }
+
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+  let days = today.getDate() - birthDate.getDate();
+
+  if (days < 0) {
+    months--;
+    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  animateValue("years", years);
+  animateValue("months", months);
+  animateValue("days", days);
+}
+
+function animateValue(id, end) {
+  let start = 0;
+  const duration = 800;
+  const incrementTime = 20;
+  const step = Math.ceil(end / (duration / incrementTime));
+
+  const obj = document.getElementById(id);
+
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= end) {
+      start = end;
+      clearInterval(timer);
+    }
+    obj.textContent = start;
+  }, incrementTime);
+}
+</script>
+
+</body>

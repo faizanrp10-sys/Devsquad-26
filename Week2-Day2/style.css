@@ -1,0 +1,39 @@
+.calculator-card {
+  background: white;
+  padding: 3rem;
+  border-radius: 20px 20px 100px 20px; /* Signature rounded corner */
+  max-width: 600px;
+}
+
+.input-group {
+  display: flex;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  position: relative;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #dbdbdb;
+}
+
+.submit-btn {
+  background: #854dff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  border: none;
+}

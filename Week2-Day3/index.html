@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resturant Menu</title>
+    <link rel="stylesheet" href="./src/output.css">
+</head>
+
+<body class=" bg-gray-100 flex items-center justify-center min-h-screen">
+    <main class=" items-center w-full h-full justify-center">
+
+        <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+         <div class="flex items-center">
+            <span class="text-4xl font-black tracking-tighter italic">Order<span class="bg-orange-500 text-white px-1.5 rounded-md ml-1 not-italic text-xl">uk</span></span>
+         </div>
+  
+        <nav class="hidden lg:flex items-center gap-12 font-bold text-slate-800">
+            <a href="#" class="hover:text-orange-500">Home</a>
+             <a href="#" class="hover:text-orange-500">Special Offers</a>
+             <a href="#" class="bg-orange-500 text-white px-10 py-3 rounded-full shadow-lg shadow-orange-200">Restaurants</a>
+             <a href="#" class="hover:text-orange-500">Track Order</a>
+        </nav>
+
+            <button class="flex items-center gap-4 bg-slate-900 text-white px-6 py-2 rounded-full relative">
+              <div class="bg-orange-500 p-2 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                 </svg>
+         </div>
+         <span class="font-bold">Cart</span>
+         <span id="cart-badge" class="absolute -top-1 -right-1 bg-red-500 text-[10px] rounded-full h-5 w-5 flex items-center justify-center border-2 border-white">0</span>
+             </button>
+         </div>
+
+    <header class=" max-w-7xl mx-auto px-6 py-8">
+        <div class="bg-[url('./assets/hero_section_img.png')] text-white rounded-3xl p-8 md:p-12 flex flex-col md:flex-row justify-between items-center">
+            <div class="space-y-4">
+                <p>I'm lovin' it!</p>
+                <h1 class="text-4xl md:text-5xl font-bold">McDonald’s East London</h1>
+                <div class="flex flex-wrap gap-3">
+                    <span class="border border-white/20 px-4 py-2 rounded-full text-sm">Minimum Order: 12 GBP</span>
+                    <span class="border border-white/20 px-4 py-2 rounded-full text-sm">Delivery in 20-25 Minutes</span>
+                </div>
+            </div>
+            <div class="relative w-[50%] h-[30%] text-black p-6 rounded-2xl mt-6 md:mt-0 shadow-lg text-center">
+                <img src="./assets/hero_section_img.png" alt="">
+                <img src="./assets/hero_section_rating_img.png" alt="" class="absolute ">
+            </div>
+        </div>
+    </header>   
+
+    <section class=" max-w-7xl mx-auto px-6 mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+            <h2 class="text-2xl font-bold">All Offers from McDonald’s East London</h2>
+            <input type="text" placeholder="Search from menu..." class="border rounded-full px-6 py-2 w-full md:w-64">
+        </div>
+        
+        <div class="flex gap-4 overflow-x-auto pb-4 border-b">
+            <button class="bg-black text-white px-6 py-2 rounded-full whitespace-nowrap">Offers</button>
+            <button class="px-6 py-2 rounded-full whitespace-nowrap hover:bg-gray-200">Burgers</button>
+            <button class="px-6 py-2 rounded-full whitespace-nowrap hover:bg-gray-200">Fries</button>
+        </div>
+    </section>
+    <!--Burgers-->
+
+    <section class=" max-w-7xl mx-auto px-6 pb-20">
+        <h2 class="text-3xl font-bold mb-8">Burgers</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="burger-container">
+
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/burger1.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/burger2.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/burger3.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/burger4.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/burger5.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/burger6.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            
+
+        </div>
+    </section> 
+ <!--Fries-->
+    <section class=" max-w-7xl mx-auto px-6 pb-20">
+        <h2 class="text-3xl font-bold mb-8 text-[#FC8A06]">Fries</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="burger-container">
+
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/fries1.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/fries2.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/fries3.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/fries4.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/fries5.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/fries6.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            
+
+        </div>
+    </section> 
+ <!--Cold Drinks-->
+    <section class=" max-w-7xl mx-auto px-6 mx-auto px-6 pb-20">
+        <h2 class="text-3xl font-bold mb-8 text-[#FC8A06]">Cold Drinks</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="burger-container">
+
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/colddrink_img1.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/colddrink_img2.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/colddrink_img3.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/colddrink_img4.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/colddrink_img5.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+            
+            <div class="border-amber-50 border-2 bg-[#ffffffeb] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div>
+                    <h3 class="font-bold">Royal Cheese Burger</h3>
+                    <p class="text-sm text-gray-600">McChicken, Big Mac, 1 Royal Cheeseburger...</p>
+                    <p class="font-bold mt-2">GBP 23.10</p>
+                </div>
+                <div class="relative">
+                    <img src="./assets/colddrink_img6.png" alt="Burger" class="w-24 h-24 object-cover rounded-lg ">
+                    
+
+                    <button class="absolute -bottom-0 -right-0 text-white w-10 h-8 rounded-br-lg rounded-tl-2xl font-bold bg-[#ffffff] flex items-center justify-center"><img src="./assets/coldrink_add_img.png" alt="Add to cart" class="w-5 h-5 rounded-lg "></button>
+                </div>
+            </div>
+
+        </div>
+    </section> 
+
+  
+
+  <!-- ================= DELIVERY / CONTACT / OPERATION ================= -->
+  <section class="max-w-7xl mx-auto px-6 ">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-3">
+
+      <!-- Delivery -->
+      <div class="p-8">
+        <div class="flex gap-2 ">
+            <img src="./assets/Delivery.png" alt="" class="w-[35px] h-[35px]">
+            <h2 class="text-xl font-semibold mb-6">Delivery information</h2>
+
+        </div>
+        <div class="space-y-2 text-sm text-gray-700">
+          <p><span class="font-semibold">Monday:</span> 12:00 AM–3:00 AM</p>
+          <p><span class="font-semibold">Tuesday:</span> 8:00 AM–3:00 AM</p>
+          <p><span class="font-semibold">Sunday:</span> 8:00 AM–12:00 AM</p>
+          <p class="mt-4"><span class="font-semibold">Estimated time:</span> 20 min</p>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="p-8 border-l border-gray-200">
+        <div class="flex gap-2">
+            <img src="./assets/Contact.png" alt="" class="w-[35px] h-[35px]">
+            <h2 class="text-xl font-semibold mb-6">Contact information</h2>
+
+        </div>
+        <p class="text-sm text-gray-700 mb-8">
+          If you have allergies or other dietary restrictions, please contact the restaurant. The restaurant will provide food-specific information upon request.
+        </p>
+        <p class="text-sm pb-2"><span class="font-semibold">Phone:</span> <br>+934443-43</p>
+        <p class="text-sm"><span class="font-semibold">Website:</span> <br> mcdonalds.uk</p>
+      </div>
+
+      <!-- Operational -->
+      <div class="bg-[#0b132b] text-white p-8">
+        <div class="flex gap-2">
+            <img src="./assets/operational_times.png" alt="" class="w-[35px] h-[35px]">
+            <h2 class="text-xl font-semibold mb-6">Operational Times</h2>
+        </div>
+        <div class="space-y-2 text-sm">
+          <p><span class="font-semibold">Monday:</span> 8:00 AM–3:00 AM</p>
+          <p><span class="font-semibold">Tuesday:</span> 8:00 AM–3:00 AM</p>
+          <p><span class="font-semibold">Wednesday:</span> 8:00 AM–3:00 AM</p>
+          <p><span class="font-semibold">Thursday:</span> 8:00 AM–3:00 AM</p>
+          <p><span class="font-semibold">Friday:</span> 8:00 AM–3:00 AM</p>
+          <p><span class="font-semibold">Saturday:</span> 8:00 AM–3:00 AM</p>
+          <p><span class="font-semibold">Sunday:</span> 8:00 AM–3:00 AM</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+    <!-- footer -->
+
+    <footer class="bg-[#eeeeee] pt-16 font-sans">
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-4 gap-8 pb-16">
+
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center cursor-pointer">
+                    <img src="./footer/logo.png" alt="Order.uk" class="h-12 w-auto object-contain" />
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div
+                        class="bg-black text-white px-3 py-2 rounded-xl flex items-center gap-2 border border-gray-800 cursor-pointer">
+                        <img src="./footer/a.jfif" alt="" class="w-6 h-6">
+                        <div class="leading-tight">
+                            <p class="text-[8px] opacity-80">Download on the</p>
+                            <p class="text-sm font-bold">App Store</p>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-black text-white px-3 py-2 rounded-xl flex items-center gap-2 border border-gray-800 cursor-pointer">
+                        <img src="./footer/g.png" alt="" class="w-6 h-6">
+                        <div class="leading-tight">
+                            <p class="text-[8px] opacity-80">GET IT ON</p>
+                            <p class="text-sm font-bold">Google Play</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-700 leading-relaxed">
+                    Company # 490039-445, Registered with<br> House of companies.
+                </p>
+            </div>
+
+            <div class="flex flex-col">
+                <h3 class="font-bold text-lg mb-6 text-[#03081f]">Get Exclusive Deals in your Inbox</h3>
+
+                <div class="flex items-center bg-[#d9d9d9] rounded-full p-1 w-full max-w-sm">
+                    <input type="email" placeholder="youremail@gmail.com"
+                        class="bg-transparent flex-grow pl-5 text-sm outline-none text-slate-700 placeholder-slate-500" />
+                    <button
+                        class="bg-[#ff8a00] hover:bg-orange-600 text-white px-8 py-3 rounded-full font-bold text-sm transition-all">
+                        Subscribe
+                    </button>
+                </div>
+
+                <p class="text-[10px] mt-3 mb-6 text-slate-600">
+                    we wont spam, read our <a href="#" class="underline">email policy</a>
+                </p>
+
+                <div class="flex gap-4">
+                    <img src="./footer/f.png" class="w-6 h-6" alt="Facebook">
+                    <img src="./footer/i.png" class="w-6 h-6" alt="Instagram">
+                    <img src="./footer/t.png" class="w-6 h-6" alt="TikTok">
+                    <img src="./footer/s.png" class="w-6 h-6" alt="Snapchat">
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4 md:pl-10">
+                <h3 class="font-bold text-lg mb-2 text-[#03081f]">Legal Pages</h3>
+                <a href="#" class="text-sm underline font-medium hover:text-orange-500">Terms and conditions</a>
+                <a href="#" class="text-sm underline font-medium hover:text-orange-500">Privacy</a>
+                <a href="#" class="text-sm underline font-medium hover:text-orange-500">Cookies</a>
+                <a href="#" class="text-sm underline font-medium hover:text-orange-500">Modern Slavery Statement</a>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <h3 class="font-bold text-lg mb-2 text-[#03081f]">Important Links</h3>
+                <a href="#" class="text-sm underline font-medium hover:text-orange-500">Get help</a>
+                <a href="#" class="text-sm underline font-medium hover:text-orange-500">Add your restaurant</a>
+                <a href="#" class="text-sm underline font-medium hover:text-orange-500">Sign up to deliver</a>
+                <a href="#" class="text-sm underline font-medium hover:text-orange-500">Create a business account</a>
+            </div>
+        </div>
+
+        <div class="bg-[#03081f] text-white py-8">
+            <div
+                class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center text-[11px] font-light opacity-90">
+                <p>Order.uk Copyright 2025, All Rights Reserved.</p>
+                <div class="flex flex-wrap gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <a href="#" class="hover:underline">Terms</a>
+                    <a href="#" class="hover:underline">Pricing</a>
+                    <a href="#" class="hover:underline">Do not sell or share my personal information</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    </div>
+
+
+
+ </main>
+
+</body>
+</html>
+

@@ -33,3 +33,7 @@
     justify-content: space-between;
     text-align: justify;
 }
+
+.padding{
+    padding: 50px;
+}

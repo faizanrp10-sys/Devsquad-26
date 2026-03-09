@@ -1,0 +1,39 @@
+*{
+    background-color: antiquewhite;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+
+}
+.intro{
+    justify-content: center;
+    text-align: center;
+}
+.contacts{
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    text-align: center;
+}
+.about{
+    margin: 20px;
+}
+.profile, .summary, .experience, .references, .skills, .education, .projects, .certifications, .languages{
+    border-top: 2px solid black;
+    display: flex;
+    margin: 10px;
+    padding: 10px;
+}
+.profile-left, .summary-left, .experience-left, .references-left, .skills-left, .education-left, .projects-left, .certifications-left, .languages-left{
+    width: 300px;
+}
+.profile-right, .profile-left, .summary-left, .experience-left, .references-left, .skills-left, .education-left, .projects-left, .certifications-left, .languages-left{
+    display: flex;
+    justify-content: space-between;
+    text-align: justify;
+}
+
+.padding{
+    padding: 50px;
+}

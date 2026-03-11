@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="./src/output.css">
+
+<title>Responsive Navbar</title>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="flex justify-between items-center bg-[#313131] w-full px-4 md:px-8 h-[60px]">
+
+<!-- LEFT -->
+<div class="flex items-center gap-6">
+
+<a href="#">
+<img src="./epic_logo.png" class="w-[24px] h-[28px]">
+</a>
+
+<ul class="hidden md:flex gap-7 text-[#AAAAAA] text-[14px]">
+
+<li>
+<a href="#" class="nav-link pb-2 border-b-2 border-transparent hover:border-blue-500 hover:text-white transition">
+STORE
+</a>
+</li>
+
+<li>
+<a href="#" class="nav-link pb-2 border-b-2 border-transparent hover:border-blue-500 hover:text-white transition">
+FAQ
+</a>
+</li>
+
+<li>
+<a href="#" class="nav-link pb-2 border-b-2 border-transparent hover:border-blue-500 hover:text-white transition">
+HELP
+</a>
+</li>
+
+<li>
+<a href="#" class="nav-link pb-2 border-b-2 border-transparent hover:border-blue-500 hover:text-white transition">
+UNREAL ENGINE
+</a>
+</li>
+
+</ul>
+
+</div>
+
+
+<!-- RIGHT (Desktop only) -->
+<div class="hidden md:flex items-center gap-6">
+
+<img src="./Frame.png" class="w-[24px] h-[24px]">
+
+<div class="flex items-center gap-1">
+<img src="./Frame (1).png" class="w-[24px] h-[24px]">
+<span class="text-[12px] text-[#AAAAAA]">SIGN IN</span>
+</div>
+
+<button class="flex justify-center items-center h-[42px] w-[112px] bg-[#007AFF] text-white rounded">
+Download
+</button>
+
+</div>
+
+
+<!-- MOBILE MENU BUTTON -->
+<button id="menu-btn" class="md:hidden text-white text-2xl">
+☰
+</button>
+
+</nav>
+
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu" class="hidden bg-[#313131] text-[#AAAAAA] flex flex-col gap-5 p-5 md:hidden">
+
+<a href="#" class="nav-link pb-2 border-b-2 border-transparent hover:border-blue-500 hover:text-white transition">
+STORE
+</a>
+
+<a href="#" class="nav-link pb-2 border-b-2 border-transparent hover:border-blue-500 hover:text-white transition">
+FAQ
+</a>
+
+<a href="#" class="nav-link pb-2 border-b-2 border-transparent hover:border-blue-500 hover:text-white transition">
+HELP
+</a>
+
+<a href="#" class="nav-link pb-2 border-b-2 border-transparent hover:border-blue-500 hover:text-white transition">
+UNREAL ENGINE
+</a>
+
+<!-- SIGN IN -->
+<div class="flex items-center gap-2 pt-3 border-t border-gray-600">
+<img src="./Frame (1).png" class="w-[22px]">
+<span>SIGN IN</span>
+</div>
+
+<!-- DOWNLOAD BUTTON -->
+<button class="bg-[#007AFF] text-white h-[40px] rounded mt-2">
+Download
+</button>
+
+</div>
+
+
+
+<script>
+
+/* MOBILE MENU */
+const menuBtn = document.getElementById("menu-btn");
+const mobileMenu = document.getElementById("mobile-menu");
+
+menuBtn.addEventListener("click", () => {
+mobileMenu.classList.toggle("hidden");
+});
+
+
+/* ACTIVE NAV LINK */
+const links = document.querySelectorAll(".nav-link");
+
+links.forEach(link => {
+
+link.addEventListener("click", function(){
+
+links.forEach(l => {
+l.classList.remove("border-blue-500","text-white");
+l.classList.add("border-transparent");
+});
+
+this.classList.remove("border-transparent");
+this.classList.add("border-blue-500","text-white");
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

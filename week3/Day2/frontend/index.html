@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/output.css">
+    <title>Document</title>
+</head>
+<script>
+
+const toggle = document.getElementById("theme-toggle");
+const circle = document.getElementById("toggle-circle");
+
+toggle.addEventListener("click", () => {
+
+document.documentElement.classList.toggle("dark");
+
+circle.classList.toggle("translate-x-7");
+
+});
+
+</script>
+
+<body class="bg-white text-black dark:bg-black dark:text-white transition duration-300">
+        <main >
+        
+    
+       <!-- <header > -->
+        <nav class="w-full py-10 px-24 flex justify-between items-center h-28 bg-black">
+            <div class=" ">
+                <ul>
+                <li><a href="#"></a><img src="./assests/Logo.png" alt=""></li>
+            </ul>
+            </div>
+            <div class="flex gap-7 text-white text-xl ">
+                <ul>
+                <li><a href=""></a>Home</li>
+                </ul>
+                <ul>
+                <li><a href=""></a>Portfolio</li>
+                </ul>
+                <ul>
+                <li><a href=""></a>Skills</li>
+                </ul>
+                <li><a href=""></a>About Me</li>
+                </ul>
+            </div>
+            <div class="flex gap-5 items-center">
+          <button id="theme-toggle" 
+class="w-14 h-7 flex items-center bg-gray-300 rounded-full p-1 dark:bg-gray-700 transition">
+
+<div id="toggle-circle"
+class="bg-white w-5 h-5 rounded-full shadow-md transition-transform"></div>
+
+</button>
+            
+              <button class="flex items-center rounded-md px-6 py-3 text-lg bg-[#925FF0] text-[#FFFFFF]">
+                Contact Me
+              </button>
+            
+            </div>
+        </nav>
+         <!-- Hero Sectioin -->
+        <section class="bg-black w-full h-[778px]  px-24 py-15 grid grid-cols-2  gap-5 ">
+            <!-- left section -->
+           <div class="w-[50%] h-full flex ">
+            <div class="flex">
+                <!-- content section -->
+                <div class="h-full gap-20 flex flex-col">
+                   
+                    <h1 class="text-8xl font-bold text-black dark:text-white">
+PRODUCT DESIGNER
+</h1>
+
+<h2 class="text-7xl font-extrabold bg-gradient-to-r from-[#FA709A] to-[#FEE140] bg-clip-text text-transparent">
+CRISTIAN MUÑOZ
+</h2>
+                   
+                   </span> 
+                   <!-- social icons -->
+                   <div class="flex flex-col gap-10">
+
+                        <div class="flex" >
+                            <ul class="flex w-full justify-between">
+                                <li>
+                                    <a href=""><img src="./assests/Instagram.png" alt="" class="border-2 p-1.5 gap-2.5 rounded-xl w-[52px] h-[52px] "></a>
+                                </li>
+                                <li>
+                                    <a href=""><img src="./assests/Figma.png" alt="" class="border-2 p-1.5 gap-2.5 rounded-xl w-[52px] h-[52px] "></a>                               
+                                 </li>
+                                <li>
+                                    <a href=""><img src="./assests/linkedin.png" alt="" class="border-2 p-1.5 gap-2.5 rounded-xl w-[52px] h-[52px]"></a>                               
+                                 </li>
+                                <li>
+                                    <a href=""><img src="./assests/telegram.png" alt="" class="border-2 p-1.5 gap-2.5 rounded-xl w-[52px] h-[52px] "></a>                               
+                                 </li>
+                                <li>
+                                    <a href=""><img src="./assests/twitter.png" alt="" class="border-2 p-1.5 gap-2.5 rounded-xl w-[52px] h-[52px] "></a>                               
+                                 </li>
+                                <li>
+                                    <a href=""><img src="./assests/Medium Logo.png" alt="" class="border-2 p-1.5 gap-2.5 rounded-xl w-[52px] h-[52px] "></a>                               
+                                 </li>
+                            </ul>
+                        </div>
+                        <div class="w-full flex items-center justify-center py-4 px-7 gap-2 bg-[#292929]">
+                            <div class="bg-black text-white dark:bg-[#292929] flex justify-center items-center gap-3 px-7 py-3">
+Download Curriculum Vitae
+</div> 
+                            <img src="./assests/arrow-circle-right.png" alt="" class="w-[20px] h-[20px]">
+                        </div>
+
+                   </div>
+                   </div>
+
+                    <!-- star section -->
+                <div class="h-full w-full absolute z-50 left-175   ">
+                    <img src="./assests/star.png" alt="" class="w-20 h-20 ">
+                </div>
+                </div>
+               
+            </div>
+                
+           </div>
+          <!-- right section -->
+           <div class="w-[100%] h-[100%] ">
+            <img src="./assests/Hero_section_img.jpg" alt="" class="h-full w-full" >
+           </div>
+        </section>
+
+        
+         
+    </main>
+</body>
+</html>
+

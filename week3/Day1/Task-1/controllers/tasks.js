@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 
 let tasks = [
   { id: uuidv4(), title: 'Learn Express', completed: false }
@@ -8,9 +8,9 @@ let tasks = [
 // @route   GET /api/tasks
 exports.getTasks = (req, res) => {
   let resultTasks = [...tasks];
-  
+
   if (req.query.title) {
-    resultTasks = resultTasks.filter(task => 
+    resultTasks = resultTasks.filter(task =>
       task.title.toLowerCase().includes(req.query.title.toLowerCase())
     );
   }

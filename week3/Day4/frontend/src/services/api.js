@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'https://week3-day4-backend-ochre.vercel.app' });
+const API = axios.create({ baseURL: 'https://backend-beta-ten-72.vercel.app' });
 
 API.interceptors.request.use((req) => {
   const profile = localStorage.getItem('profile');

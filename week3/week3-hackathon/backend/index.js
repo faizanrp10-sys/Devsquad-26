@@ -19,46 +19,48 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Database Connection
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,
-      family: 4 // Force IPv4
-    });
-    console.log('Connected to MongoDB');
+// Database Connection Utility
+const connectDB = require('./src/config/db');
 
-    // Auto-seed if database is empty
-    const Product = require('./src/models/Product');
-    const User = require('./src/models/User');
-    const { users, products } = require('./src/data/initialData');
-    
-    const productCount = await Product.countDocuments();
-    if (productCount === 0) {
-      console.log('Database is empty. auto-seeding starting...');
-      await User.deleteMany({});
-      await User.create(users);
-      await Product.insertMany(products);
-      console.log('Auto-seeding completed successfully');
-    }
+// Ensure DB is connected for every request (Serverless friendly)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
   } catch (err) {
-    console.error('Could not connect to MongoDB');
-    console.error('Error details:', err.message);
-    
-    if (err.message.includes('ECONNREFUSED')) {
-      console.log('\n--- EXACT FIX REQUIRED ---');
-      console.log('Your network/DNS is blocking MongoDB SRV records.');
-      console.log('1. Go to MongoDB Atlas (https://cloud.mongodb.com)');
-      console.log('2. Click "Connect" -> "Drivers"');
-      console.log('3. Select Node.js version "2.2.12 or later"');
-      console.log('4. Copy the connection string (it starts with "mongodb://" NOT "mongodb+srv://")');
-      console.log('5. Paste it into your backend/.env file as MONGODB_URI');
-      console.log('--------------------------\n');
-    }
+    res.status(503).json({ 
+      success: false,
+      message: 'Database connection failed. Please try again in a moment.',
+      error: err.message
+    });
   }
+});
+
+// One-time initialization (like seeding) can be handled here or in a separate task
+const initializeDB = async () => {
+    try {
+        await connectDB();
+        const Product = require('./src/models/Product');
+        const User = require('./src/models/User');
+        const { users, products } = require('./src/data/initialData');
+        
+        const productCount = await Product.countDocuments();
+        if (productCount === 0) {
+            console.log('Database is empty. auto-seeding starting...');
+            await User.deleteMany({});
+            await User.create(users);
+            await Product.insertMany(products);
+            console.log('Auto-seeding completed successfully');
+        }
+    } catch (err) {
+        console.error('Initialization error:', err.message);
+    }
 };
 
-connectDB();
+// Only run seeding logic in development or explicitly if needed
+if (process.env.NODE_ENV !== 'production') {
+    initializeDB();
+}
 
 // Routes
 app.use('/api/auth', require('./src/routes/authRoutes'));

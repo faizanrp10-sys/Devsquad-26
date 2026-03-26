@@ -33,8 +33,8 @@
                
             </nav>
              <button id="cart-btn"
-                    class="bg-dark-blue text-white pl-2 pr-6 py-2 rounded-full flex items-center gap-4 font-bold relative group">
-                    <div class="bg-primary-orange p-2 rounded-full">
+                    class=" text-black pl-2 pr-6 py-2 rounded-full flex items-center gap-4 font-bold relative group">
+                    <div class="bg-[#FC8A06] p-2 rounded-full">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6zM3 6h18M16 10a4 4 0 01-8 0"></path>
@@ -82,9 +82,9 @@
                             alt="Hero Image" />
                     </div>
 
-                    <!-- Rating badge with specific dimensions and absolute positioning relative to hero image -->
+                    <!-- Rating badge with specific dimensions and absolute positioning -->
                     <div
-                        class="absolute top-[211px] -left-14 w-[136px] h-[158px] bg-white p-4 rounded-[12px] shadow-premium flex items-center justify-center border-2 border-gray-50">
+                        class="absolute top-[211px] left-[-56px] w-[136px] h-[158px] bg-white p-4 rounded-[12px] shadow-premium flex items-center justify-center border-2 border-gray-50">
                         <img src="assets/hero_section_rating_img.png" class="w-full h-full object-contain"
                             alt="Rating Badge" />
                     </div>
@@ -126,6 +126,9 @@
                     <button
                         class="cat-btn text-white px-6 py-3 rounded-full font-bold text-lg whitespace-nowrap hover:bg-black/10"
                         data-category="Cold drinks">Cold drinks</button>
+                    <button
+                        class="cat-btn text-white px-6 py-3 rounded-full font-bold text-lg whitespace-nowrap hover:bg-black/10"
+                        data-category="Pizzas">Pizzas</button>
                     <button
                         class="cat-btn text-white px-6 py-3 rounded-full font-bold text-lg whitespace-nowrap hover:bg-black/10"
                         data-category="Happy Meal®">Happy Meal®</button>
@@ -327,6 +330,8 @@
                 <!-- Dynamic restaurants -->
             </div>
         </section>
+
+        
     </main>
 
     <footer class="bg-white pt-24">
@@ -398,51 +403,38 @@
         </div>
     </footer>
 
-    <!-- Cart Modal (Separate Page Feel) -->
+    <!-- Cart Modal (Figma Aligned) -->
     <div id="cart-modal" class="cart-modal">
-        <div class="z-500 bg-white w-full max-w-4xl h-full md:h-auto md:max-h-[90vh] md:rounded-[40px] overflow-hidden fixed top-10 left-80 shadow-2xl transform transition-all duration-300 scale-95 opacity-0 active-modal flex flex-col">
-            <!-- Header/Navigation Bar -->
-            <div class="p-8 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
-                <div class="flex items-center gap-6">
-                    <button id="close-cart" class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center hover:bg-primary-orange group transition-colors shadow-sm">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-dark-blue group-hover:text-white">
-                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
-                        </svg>
-                    </button>
-                    <h2 class="text-4xl font-black italic">Your Order</h2>
-                </div>
-                <div class="bg-primary-orange px-6 py-2 rounded-full text-white font-bold animate-pulse">
-                    Checkout Mode
+        <div class="z-[500] bg-white w-full max-w-4xl h-[90vh] md:rounded-[40px] overflow-hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-2xl transform transition-all duration-300 scale-95 opacity-0 flex flex-col">
+            <!-- Top Header Image -->
+            <div class="relative h-64 shrink-0 overflow-hidden">
+                <img src="assets/cart_section_top_pizza.png" class="w-full h-full object-cover">
+                <button id="close-cart" class="absolute top-6 right-6 w-12 h-12 bg-primary-orange text-white rounded-full flex items-center justify-center shadow-xl hover:rotate-90 transition-transform z-10">
+                    <img src="assets/cart_section_close_img.png" class="w-10">
+                </button>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-10">
+                    <h2 class="text-white text-5xl font-black italic">My Basket</h2>
                 </div>
             </div>
 
             <!-- Content Area -->
-            <div class="flex-1 overflow-hidden flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-gray-100">
-                <!-- Left: Items List -->
-                <div id="cart-items-list" class="flex-1 p-10 overflow-y-auto">
+            <div class="flex-1 overflow-hidden flex flex-col">
+                <!-- Items List -->
+                <div id="cart-items-list" class="flex-1 p-10 overflow-y-auto space-y-4">
                     <!-- Items dynamically injected -->
                 </div>
 
-                <!-- Right: Summary -->
-                <div class="w-full md:w-[420px] bg-gray-50/50 p-10 flex flex-col justify-between">
-                    <div>
-                        <div class="h-44 bg-cover bg-center rounded-3xl mb-10 shadow-lg" style="background-image: url('assets/cart_section_top_pizza.png');"></div>
-                        
-                        <div class="space-y-6">
-                            <div class="flex justify-between items-center text-3xl font-black italic">
-                                <span>Total to pay</span>
-                                <span id="cart-total-amount" class="text-primary-orange">GBP 0.00</span>
-                            </div>
-                            
-                            <div class="bg-white p-6 rounded-3xl flex justify-between items-center font-bold text-lg shadow-sm">
-                                <span class="text-text-muted">Delivery & Tax</span>
-                                <span class="text-success">Calculated next</span>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Total Bar (Orange) -->
+                <div class="bg-primary-orange px-10 py-6 flex justify-between items-center text-white">
+                    <span class="text-2xl font-black italic">Total to pay</span>
+                    <span id="cart-total-amount" class="text-4xl font-black">GBP 0.00</span>
+                </div>
 
-                    <button class="w-full bg-[#03A84E] text-white py-6 rounded-full font-black text-2xl shadow-xl shadow-green-600/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 mt-12">
-                        Next Step <img src="assets/cart_section_nextstep.png" class="w-10">
+                <!-- Footer Actions -->
+                <div class="p-10 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <button id="back-to-menu" class="text-dark-blue font-bold text-xl hover:underline cursor-pointer">Take me back</button>
+                    <button class="bg-[#03A84E] text-white px-12 py-5 rounded-full font-black text-2xl flex items-center justify-center gap-4 hover:scale-105 transition-all shadow-lg shadow-green-600/20">
+                        Next Step <img src="assets/cart_section_nextstep.png" class="w-8">
                     </button>
                 </div>
             </div>

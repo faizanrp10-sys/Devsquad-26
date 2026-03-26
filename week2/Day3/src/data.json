@@ -1,110 +1,151 @@
 {
-  "categories": ["Offers", "Burgers", "Fries", "Cold Drinks"],
+  "categories": ["Offers", "Burgers", "Fries", "Cold Drinks", "Pizzas"],
   "products": [
     {
       "id": 1,
       "name": "Royal Cheese Burger",
-      "description": "McChicken, Big Mac, 1 Royal Cheeseburger...",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
       "price": 23.10,
       "category": "Burgers",
       "image": "assets/burger1.png"
     },
     {
       "id": 2,
-      "name": "Classic Beef Burger",
-      "description": "Juicy beef patty with fresh lettuce and tomato...",
-      "price": 18.50,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Burgers",
       "image": "assets/burger2.png"
     },
     {
       "id": 3,
-      "name": "Chicken Deluxe Burger",
-      "description": "Crispy chicken fillet with mayo and pickles...",
-      "price": 21.00,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Burgers",
       "image": "assets/burger3.png"
     },
     {
       "id": 4,
-      "name": "Spicy Zinger Burger",
-      "description": "Spicy breaded chicken breast on a toasted bun...",
-      "price": 19.99,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Burgers",
       "image": "assets/burger4.png"
     },
     {
       "id": 5,
-      "name": "Veggie Delight Burger",
-      "description": "A delicious plant-based patty with extra cheese...",
-      "price": 17.50,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Burgers",
       "image": "assets/burger5.png"
     },
     {
       "id": 6,
-      "name": "Bacon BBQ Burger",
-      "description": "Smoky BBQ sauce, crispy bacon, and cheddar...",
-      "price": 24.50,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Burgers",
       "image": "assets/burger6.png"
     },
     {
       "id": 7,
-      "name": "Classic French Fries",
-      "description": "Golden, crispy, and perfectly salted...",
-      "price": 5.50,
+      "name": "Royal Cheese Burger with extra Fries",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Fries",
       "image": "assets/fries1.png"
     },
     {
       "id": 8,
-      "name": "Cheesy Loaded Fries",
-      "description": "Fries topped with melted cheddar and jalapeño...",
-      "price": 8.50,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Fries",
       "image": "assets/fries2.png"
     },
     {
       "id": 9,
-      "name": "Curly Spiced Fries",
-      "description": "Twisted fries with a secret spicy seasoning...",
-      "price": 6.75,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Fries",
       "image": "assets/fries3.png"
     },
     {
       "id": 10,
-      "name": "Sweet Potato Fries",
-      "description": "Naturally sweet and healthy alternative...",
-      "price": 7.25,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Fries",
       "image": "assets/fries4.png"
     },
     {
       "id": 11,
-      "name": "Coca-Cola 500ml",
-      "description": "Refreshing original taste Coca-Cola...",
-      "price": 2.50,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
+      "category": "Fries",
+      "image": "assets/fries5.png"
+    },
+    {
+      "id": 12,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
+      "category": "Fries",
+      "image": "assets/fries6.png"
+    },
+    {
+      "id": 13,
+      "name": "Royal Cheese Burger with extra Fries",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Cold Drinks",
       "image": "assets/colddrink_img1.png"
     },
     {
-      "id": 12,
-      "name": "Orange Juice",
-      "description": "100% freshly squeezed orange juice...",
-      "price": 4.50,
+      "id": 14,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Cold Drinks",
       "image": "assets/colddrink_img2.png"
     },
     {
-      "id": 13,
-      "name": "Chocolate Milkshake",
-      "description": "Thick and creamy Belgian chocolate shake...",
-      "price": 6.50,
+      "id": 15,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
       "category": "Cold Drinks",
       "image": "assets/colddrink_img3.png"
+    },
+    {
+      "id": 16,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
+      "category": "Cold Drinks",
+      "image": "assets/colddrink_img4.png"
+    },
+    {
+      "id": 17,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
+      "category": "Cold Drinks",
+      "image": "assets/colddrink_img5.png"
+    },
+    {
+      "id": 18,
+      "name": "The classics for 3",
+      "description": "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
+      "price": 23.10,
+      "category": "Cold Drinks",
+      "image": "assets/colddrink_img6.png"
     }
+    
   ],
   "reviews": [
     {
@@ -118,20 +159,20 @@
     },
     {
       "id": 2,
-      "user": "Jane Doe",
-      "location": "Central London",
-      "rating": 4,
-      "date": "10th October, 2023",
-      "comment": "Consistency is key, and Order.UK delivered exactly what I expected. The fries were a bit cold, but the burger was fantastic.",
+      "user": "St Glx",
+      "location": "South London",
+      "rating": 5,
+      "date": "24th September, 2023",
+      "comment": "The positive aspect was undoubtedly the efficiency of the service. The queue moved quickly, the staff was friendly, and the food was up to the usual McDonald's standard.",
       "image": "assets/reviews/1.png"
     },
     {
       "id": 3,
-      "user": "Mark Wilson",
-      "location": "East London",
+      "user": "St Glx",
+      "location": "South London",
       "rating": 5,
-      "date": "15th November, 2023",
-      "comment": "Lightning fast delivery! The package was still steaming hot when it arrived. My new favorite platform for ordering food.",
+      "date": "24th September, 2023",
+      "comment": "The positive aspect was undoubtedly the efficiency of the service. The queue moved quickly, the staff was friendly, and the food was up to the usual McDonald's standard.",
       "image": "assets/reviews/1.png"
     }
   ],
@@ -144,3 +185,4 @@
     { "name": "Shaurma 1", "image": "assets/shaurma.png", "bgColor": "linear-gradient(180deg, #FC8A06 0%, #FFD600 100%)" }
   ]
 }
+

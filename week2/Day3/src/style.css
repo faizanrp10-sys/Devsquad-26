@@ -69,6 +69,31 @@
     animation: bounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* Cart Item Styles */
+.cart-item {
+    @apply flex items-center gap-6 p-4 rounded-3xl transition-all bg-white border border-gray-100;
+}
+
+.cart-item.highlight {
+    @apply bg-dark-blue text-white border-none;
+}
+
+.cart-item.highlight .item-name {
+    @apply text-white;
+}
+
+.cart-item.highlight .qty-btn {
+    @apply bg-white/10 hover:bg-white/20 text-white;
+}
+
+.qty-btn {
+    @apply w-10 h-10 rounded-full flex items-center justify-center transition-all bg-gray-100 hover:bg-gray-200 text-dark-blue;
+}
+
+.qty-display {
+    @apply font-black text-xl min-w-[30px] text-center;
+}
+
 @keyframes bounce {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.3); }

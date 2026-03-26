@@ -8,7 +8,7 @@ class Cart {
         this.modal = document.getElementById('cart-modal');
         this.itemsContainer = document.getElementById('cart-items-list');
         this.totalDisplay = document.getElementById('cart-total-amount');
-        this.modalContent = this.modal.querySelector('.active-modal');
+        this.modalContent = this.modal.children[0];
         
         this.init();
         this.updateUI();
@@ -17,6 +17,7 @@ class Cart {
     init() {
         document.getElementById('cart-btn').addEventListener('click', () => this.toggleModal(true));
         document.getElementById('close-cart').addEventListener('click', () => this.toggleModal(false));
+        document.getElementById('back-to-menu').addEventListener('click', () => this.toggleModal(false));
         this.modal.addEventListener('click', (e) => {
             if (e.target === this.modal) this.toggleModal(false);
         });
@@ -89,26 +90,32 @@ class Cart {
     }
 
     renderItems() {
-        this.itemsContainer.innerHTML = this.items.length ? this.items.map(item => `
-            <div class="flex items-center gap-6 py-6 group border-b border-gray-50 last:border-0">
-                <div class="w-24 h-24 rounded-2xl overflow-hidden bg-gray-50 shadow-inner">
-                    <img src="${item.image}" class="w-full h-full object-cover">
-                </div>
-                <div class="flex-1">
-                    <h4 class="font-black italic text-xl mb-1">${item.name}</h4>
-                    <p class="text-text-muted font-medium mb-3">${item.category}</p>
-                    <div class="flex items-center gap-4">
-                        <div class="flex bg-gray-100 rounded-full p-1 items-center shadow-inner">
-                            <button onclick="cart.updateQuantity(${item.id}, -1)" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white transition-all text-xl font-bold">-</button>
-                            <span class="w-8 text-center font-black">${item.quantity}</span>
-                            <button onclick="cart.updateQuantity(${item.id}, 1)" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white transition-all text-xl font-bold">+</button>
-                        </div>
-                        <span class="font-black italic text-lg text-primary-orange">GBP ${(item.price * item.quantity).toFixed(2)}</span>
+        this.itemsContainer.innerHTML = this.items.length ? this.items.map(item => {
+            const isHighlighted = item.name === 'Hawaiian';
+            return `
+                <div class="cart-item ${isHighlighted ? 'highlight' : ''} shadow-lg">
+                    <div class="w-16 h-16 rounded-full overflow-hidden shrink-0 border-2 border-gray-100">
+                        <img src="${item.image}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-black italic text-xl item-name">${item.name}</h4>
+                    </div>
+                    <div class="flex items-center gap-4 bg-gray-50/10 rounded-full p-1">
+                        <button onclick="cart.updateQuantity(${item.id}, -1)" class="qty-btn bg-gray-100 hover:bg-gray-200">
+                            <svg width="12" height="2" viewBox="0 0 12 2" fill="none" stroke="currentColor" stroke-width="3">
+                                <path d="M1 1h10"></path>
+                            </svg>
+                        </button>
+                        <span class="qty-display">${item.quantity}</span>
+                        <button onclick="cart.updateQuantity(${item.id}, 1)" class="qty-btn bg-gray-100 hover:bg-gray-200">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="3">
+                                <path d="M1 6h10M6 1v10"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-                <button onclick="cart.removeItem(${item.id})" class="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-all text-2xl">×</button>
-            </div>
-        `).join('') : '<div class="text-center py-20"><p class="text-2xl font-bold text-gray-300 italic">Your cart is empty</p></div>';
+            `;
+        }).join('') : '<div class="text-center py-20"><p class="text-2xl font-bold text-gray-300 italic">Your Basket is empty</p></div>';
     }
 }
 
@@ -211,29 +218,34 @@ function initCategoryNavigation() {
 function renderReviews() {
     const container = document.getElementById('reviews-slider');
     container.innerHTML = reviews.map(rev => `
-        <div class="bg-white border-2 border-gray-50 p-10 rounded-[40px] shadow-soft min-w-[420px] shrink-0 transition-all hover:shadow-premium group">
-            <div class="flex justify-between items-start mb-8">
+        <div class="bg-white border-2 border-gray-100 p-8 rounded-[32px] shadow-premium w-[400px] h-[250px] shrink-0 transition-all group flex flex-col justify-between overflow-hidden">
+            <div class="flex justify-between items-start mb-4">
                 <div class="flex gap-4">
-                    <img src="${rev.image}" class="w-16 h-16 rounded-full border-4 border-gray-50 object-cover shadow-sm">
-                    <div class="border-l-2 border-primary-orange pl-4">
-                        <h4 class="font-black italic text-xl leading-tight">${rev.user}</h4>
-                        <p class="text-primary-orange text-sm font-bold uppercase tracking-wider">${rev.location}</p>
+                    <img src="${rev.image}" class="w-12 h-12 rounded-full border-2 border-primary-orange/20 object-cover shadow-sm">
+                    <div>
+                        <h4 class="font-black italic text-xl leading-none mb-1">${rev.user}</h4>
+                        <p class="text-primary-orange text-[10px] font-bold uppercase tracking-widest">${rev.location}</p>
                     </div>
                 </div>
                 <div class="flex flex-col items-end">
                     <div class="flex gap-1 mb-2">
                         ${Array(5).fill(0).map((_, i) => `
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="${i < rev.rating ? '#FC8A06' : '#E2E8F0'}" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="${i < rev.rating ? '#FC8A06' : '#E2E8F0'}">
                                 <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                             </svg>
                         `).join('')}
                     </div>
-                    <p class="text-xs text-text-muted font-bold italic flex items-center gap-2">
-                        <span class="w-2 h-2 bg-primary-orange rounded-full"></span> ${rev.date}
-                    </p>
                 </div>
             </div>
-            <p class="text-lg leading-relaxed font-semibold text-dark-blue/80 line-clamp-4 group-hover:line-clamp-none transition-all">${rev.comment}</p>
+            <div class="border-l-[4px] border-primary-orange pl-6 mb-2">
+                <p class="text-sm leading-relaxed font-bold text-dark-blue italic opacity-90 line-clamp-3 group-hover:line-clamp-none transition-all">${rev.comment}</p>
+            </div>
+            <div class="flex justify-end">
+                <div class="bg-gray-50 px-3 py-1 rounded-full flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 bg-primary-orange rounded-full"></span>
+                    <span class="text-[9px] font-black italic uppercase text-text-muted opacity-80">${rev.date}</span>
+                </div>
+            </div>
         </div>
     `).join('');
     
@@ -271,7 +283,7 @@ function renderSimilarRestaurants(restaurants) {
             <div class="w-56 h-56 rounded-[40px] p-10 flex items-center justify-center shadow-soft border border-gray-50" style="background: ${rest.bgColor}">
                 <img src="${rest.image}" class="w-full h-full object-contain filter drop-shadow-sm">
             </div>
-            <p class="text-center mt-6 font-black italic text-lg text-primary-orange">${rest.name}</p>
+            <p class="text-center mt-6 font-black italic text-lg text-[#FC8A06]">${rest.name}</p>
         </a>
     `).join('');
 }

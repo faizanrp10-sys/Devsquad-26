@@ -8,7 +8,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://week4-day1-backend-iota.vercel.app',
         changeOrigin: true,
       },
     },

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ClipboardList } from 'lucide-react';
-import { Task, CreateTaskInput, UpdateTaskInput } from '../types/todo';
+import { Task, UpdateTaskInput } from '../types/todo';
 import TodoItem from './TodoItem';
 
 interface TodoListProps {

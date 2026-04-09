@@ -21,7 +21,7 @@ const App: React.FC = () => {
       const data = await api.fetchTasks();
       setTasks(data);
     } catch {
-      setError('Could not connect to server. Is the backend running on port 5000?');
+      setError('Could not connect to server. Please check if the deployed backend is available.');
     } finally {
       setLoading(false);
     }

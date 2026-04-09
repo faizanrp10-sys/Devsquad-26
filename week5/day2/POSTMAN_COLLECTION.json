@@ -1,0 +1,310 @@
+{
+  "name": "comment-system-nestjs",
+  "version": "1",
+  "collection": {
+    "1": {
+      "name": "Register User",
+      "description": "Create a new user account",
+      "url": "http://localhost:3000/api/auth/register",
+      "method": "POST",
+      "header": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "raw",
+        "raw": "{\n  \"username\": \"john_doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\"\n}"
+      }
+    },
+    "2": {
+      "name": "Login User",
+      "description": "Login with email and password",
+      "url": "http://localhost:3000/api/auth/login",
+      "method": "POST",
+      "header": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "raw",
+        "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\"\n}"
+      }
+    },
+    "3": {
+      "name": "Get All Users",
+      "description": "Retrieve all registered users",
+      "url": "http://localhost:3000/api/users",
+      "method": "GET"
+    },
+    "4": {
+      "name": "Get User by ID",
+      "description": "Get specific user information",
+      "url": "http://localhost:3000/api/users/{{userId}}",
+      "method": "GET"
+    },
+    "5": {
+      "name": "Update User Profile",
+      "description": "Update user profile information",
+      "url": "http://localhost:3000/api/users/profile/{{userId}}",
+      "method": "PATCH",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "raw",
+        "raw": "{\n  \"username\": \"john_updated\",\n  \"bio\": \"Software developer and tech enthusiast\",\n  \"profilePicture\": \"https://example.com/profile.jpg\"\n}"
+      }
+    },
+    "6": {
+      "name": "Follow User",
+      "description": "Follow another user",
+      "url": "http://localhost:3000/api/users/follow/{{targetUserId}}",
+      "method": "POST",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "7": {
+      "name": "Unfollow User",
+      "description": "Unfollow a user",
+      "url": "http://localhost:3000/api/users/unfollow/{{targetUserId}}",
+      "method": "POST",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "8": {
+      "name": "Get User Followers",
+      "description": "Get list of user's followers",
+      "url": "http://localhost:3000/api/users/followers/{{userId}}",
+      "method": "GET"
+    },
+    "9": {
+      "name": "Get User Following",
+      "description": "Get list of users that user is following",
+      "url": "http://localhost:3000/api/users/following/{{userId}}",
+      "method": "GET"
+    },
+    "10": {
+      "name": "Create Comment",
+      "description": "Create a new top-level comment",
+      "url": "http://localhost:3000/api/comments",
+      "method": "POST",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "raw",
+        "raw": "{\n  \"content\": \"This is an amazing post! Really enjoyed reading it.\"\n}"
+      }
+    },
+    "11": {
+      "name": "Reply to Comment",
+      "description": "Create a reply to an existing comment",
+      "url": "http://localhost:3000/api/comments",
+      "method": "POST",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "raw",
+        "raw": "{\n  \"content\": \"Thanks for the reply! I agree completely.\",\n  \"parentCommentId\": \"{{commentId}}\"\n}"
+      }
+    },
+    "12": {
+      "name": "Get All Comments",
+      "description": "Retrieve all top-level comments",
+      "url": "http://localhost:3000/api/comments",
+      "method": "GET"
+    },
+    "13": {
+      "name": "Get Comment by ID",
+      "description": "Get specific comment with its replies",
+      "url": "http://localhost:3000/api/comments/{{commentId}}",
+      "method": "GET"
+    },
+    "14": {
+      "name": "Get Comment Replies",
+      "description": "Get all replies to a specific comment",
+      "url": "http://localhost:3000/api/comments/{{commentId}}/replies",
+      "method": "GET"
+    },
+    "15": {
+      "name": "Update Comment",
+      "description": "Edit your comment content",
+      "url": "http://localhost:3000/api/comments/{{commentId}}",
+      "method": "PATCH",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "raw",
+        "raw": "{\n  \"content\": \"This is the updated comment content.\"\n}"
+      }
+    },
+    "16": {
+      "name": "Delete Comment",
+      "description": "Delete your comment",
+      "url": "http://localhost:3000/api/comments/{{commentId}}",
+      "method": "DELETE",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "17": {
+      "name": "Like Comment",
+      "description": "Like a comment",
+      "url": "http://localhost:3000/api/likes/{{commentId}}",
+      "method": "POST",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "18": {
+      "name": "Unlike Comment",
+      "description": "Remove your like from a comment",
+      "url": "http://localhost:3000/api/likes/{{commentId}}",
+      "method": "DELETE",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "19": {
+      "name": "Get Comment Likes",
+      "description": "Get list of users who liked a comment",
+      "url": "http://localhost:3000/api/likes/comment/{{commentId}}",
+      "method": "GET"
+    },
+    "20": {
+      "name": "Check if Liked",
+      "description": "Check if current user liked a comment",
+      "url": "http://localhost:3000/api/likes/check/{{commentId}}",
+      "method": "GET",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "21": {
+      "name": "Get Notifications",
+      "description": "Get your notifications with pagination",
+      "url": "http://localhost:3000/api/notifications?limit=20",
+      "method": "GET",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "22": {
+      "name": "Get Unread Notifications",
+      "description": "Get only unread notifications",
+      "url": "http://localhost:3000/api/notifications/unread",
+      "method": "GET",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "23": {
+      "name": "Get Unread Count",
+      "description": "Get count of unread notifications",
+      "url": "http://localhost:3000/api/notifications/unread-count",
+      "method": "GET",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "24": {
+      "name": "Mark Notification as Read",
+      "description": "Mark a notification as read",
+      "url": "http://localhost:3000/api/notifications/{{notificationId}}/read",
+      "method": "PATCH",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "25": {
+      "name": "Mark All as Read",
+      "description": "Mark all notifications as read",
+      "url": "http://localhost:3000/api/notifications/mark-all-read",
+      "method": "PATCH",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    },
+    "26": {
+      "name": "Delete Notification",
+      "description": "Delete a notification",
+      "url": "http://localhost:3000/api/notifications/{{notificationId}}",
+      "method": "DELETE",
+      "header": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{accessToken}}"
+        }
+      ]
+    }
+  }
+}

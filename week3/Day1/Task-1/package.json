@@ -16,6 +16,7 @@
     "express": "^5.2.1",
     "swagger-ui-express": "^5.0.1",
     "tailwindcss": "^4.2.1",
+    "uuid": "^8.3.2",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {

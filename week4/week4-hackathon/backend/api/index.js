@@ -23,20 +23,12 @@ import planRoutes from '../routes/planRoutes.js';
 import uploadRoutes from '../routes/uploadRoutes.js';
 import contentRoutes from '../routes/contentRoutes.js';
 import path from 'path';
-import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Create uploads directory if it doesn't exist
-const uploadsDir = path.join(__dirname, '..', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-}
-
 // Serve static files
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 app.use('/images', express.static(path.join(__dirname, '..', 'public/images')));
 
 // Routes

@@ -1,0 +1,7 @@
+{
+  "name": "init-project",
+  "scripts": {
+    "init:frontend": "npx -y create-next-app@latest frontend --typescript --no-tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm",
+    "init:backend": "npm install -g @nestjs/cli && nest new backend --package-manager npm --skip-git"
+  }
+}

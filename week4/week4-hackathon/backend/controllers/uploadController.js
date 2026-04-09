@@ -1,8 +1,5 @@
 import multer from 'multer';
-
-
 import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -10,7 +7,6 @@ dotenv.config();
 // Parse Cloudinary URL and configure
 if (process.env.CLOUDINARY_URL) {
   try {
-    // Cloudinary URL format: cloudinary://api_key:api_secret@cloud_name
     const url = new URL(process.env.CLOUDINARY_URL);
     cloudinary.config({
       cloud_name: url.host,
@@ -21,44 +17,53 @@ if (process.env.CLOUDINARY_URL) {
   } catch (error) {
     console.error('Error parsing Cloudinary URL:', error);
   }
-} else {
-  console.error("CLOUDINARY_URL not found in environment variables");
 }
 
-// Configure Storage
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: async (req, file) => {
-    console.log('Uploading file:', file.originalname, 'MIME type:', file.mimetype);
-    const isVideo = file.mimetype.startsWith('video');
-    return {
-      folder: 'streamvibe',
-      resource_type: isVideo ? 'video' : 'image',
-      public_id: `${file.fieldname}-${Date.now()}`,
-    };
-  },
-});
-
+// Configure Multer for Memory Storage
+const storage = multer.memoryStorage();
 const upload = multer({ 
   storage: storage,
   fileFilter: (req, file, cb) => {
-    console.log('File filter - file:', file.originalname);
     cb(null, true);
   }
 });
 
-export const uploadFile = (req, res) => {
+// Helper for direct Cloudinary upload via stream
+const uploadToCloudinary = (fileBuffer, mimetype, fieldname) => {
+  return new Promise((resolve, reject) => {
+    const isVideo = mimetype.startsWith('video');
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { 
+        folder: 'streamvibe',
+        resource_type: isVideo ? 'video' : 'image',
+        public_id: `${fieldname}-${Date.now()}`
+      },
+      (error, result) => {
+        if (error) {
+          console.error('Cloudinary stream upload error:', error);
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+    uploadStream.end(fileBuffer);
+  });
+};
+
+export const uploadFile = async (req, res) => {
   try {
-    console.log('uploadFile called - req.file:', req.file);
     if (!req.file) {
-      console.error('No file in request');
       return res.status(400).json({ message: 'No file uploaded' });
     }
     
-    console.log('File uploaded successfully:', req.file);
+    // Upload directly from memory buffer
+    const result = await uploadToCloudinary(req.file.buffer, req.file.mimetype, req.file.fieldname);
+    
+    console.log('File uploaded successfully via stream:', result.secure_url);
     res.status(200).json({ 
       message: 'File uploaded to Cloudinary successfully',
-      url: req.file.path // Correct secure URL from Cloudinary
+      url: result.secure_url 
     });
   } catch (error) {
     console.error('Upload error:', error);

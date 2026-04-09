@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Task, CreateTaskInput, UpdateTaskInput, ApiResponse } from '../types/todo';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://week4-day1-backend-iota.vercel.app/api',
   headers: { 'Content-Type': 'application/json' },
 });
 

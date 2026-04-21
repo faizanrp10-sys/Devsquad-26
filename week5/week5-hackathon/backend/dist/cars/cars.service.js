@@ -23,7 +23,16 @@ let CarsService = class CarsService {
         this.carModel = carModel;
     }
     async create(createData, userId) {
-        const newCar = new this.carModel({ ...createData, seller: userId });
+        const carObject = {
+            ...createData,
+            seller: userId,
+            price: Number(createData.price),
+            year: Number(createData.year),
+            mileage: Number(createData.mileage),
+            auctionEndTime: createData.auctionEndTime ? new Date(createData.auctionEndTime) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            status: 'active',
+        };
+        const newCar = new this.carModel(carObject);
         return newCar.save();
     }
     async findAll(query) {

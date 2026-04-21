@@ -8,7 +8,16 @@ export class CarsService {
   constructor(@InjectModel(Car.name) private carModel: Model<CarDocument>) {}
 
   async create(createData: any, userId: string): Promise<CarDocument> {
-    const newCar = new this.carModel({ ...createData, seller: userId });
+    const carObject = {
+      ...createData,
+      seller: userId,
+      price: Number(createData.price),
+      year: Number(createData.year),
+      mileage: Number(createData.mileage),
+      auctionEndTime: createData.auctionEndTime ? new Date(createData.auctionEndTime) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Default 7 days
+      status: 'active',
+    };
+    const newCar = new this.carModel(carObject);
     return newCar.save();
   }
 

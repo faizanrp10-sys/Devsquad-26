@@ -16,6 +16,9 @@ exports.CarsController = void 0;
 const common_1 = require("@nestjs/common");
 const cars_service_1 = require("./cars.service");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
+const path_1 = require("path");
 let CarsController = class CarsController {
     carsService;
     constructor(carsService) {
@@ -27,8 +30,12 @@ let CarsController = class CarsController {
     getCarById(id) {
         return this.carsService.findById(id);
     }
-    createCar(req, body) {
-        return this.carsService.create(body, req.user.userId);
+    createCar(req, body, images) {
+        const carData = {
+            ...body,
+            images: images ? images.map(f => `uploads/${f.filename}`) : [],
+        };
+        return this.carsService.create(carData, req.user.userId);
     }
     getMyCars(req) {
         return this.carsService.findBySeller(req.user.userId);
@@ -52,10 +59,23 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('images', 10, {
+        storage: (0, multer_1.diskStorage)({
+            destination: './public/uploads',
+            filename: (req, file, cb) => {
+                const randomName = Array(32)
+                    .fill(null)
+                    .map(() => Math.round(Math.random() * 16).toString(16))
+                    .join('');
+                return cb(null, `${randomName}${(0, path_1.extname)(file.originalname)}`);
+            },
+        }),
+    })),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, Object, Array]),
     __metadata("design:returntype", void 0)
 ], CarsController.prototype, "createCar", null);
 __decorate([

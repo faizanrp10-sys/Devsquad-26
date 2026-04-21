@@ -49,6 +49,15 @@ let BidsService = class BidsService {
     async getBidsByUser(userId) {
         return this.bidModel.find({ bidder: userId }).populate('car').exec();
     }
+    async getCarById(carId) {
+        return this.carsService.findById(carId);
+    }
+    async payForCar(carId) {
+        return this.carsService.payForCar(carId);
+    }
+    async updateShippingStatus(carId, status) {
+        return this.carsService.updateShippingStatus(carId, status);
+    }
 };
 exports.BidsService = BidsService;
 exports.BidsService = BidsService = __decorate([

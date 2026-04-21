@@ -19,6 +19,10 @@ let Car = class Car {
     price;
     auctionEndTime;
     status;
+    shippingStatus;
+    lotNumber;
+    winningDate;
+    endDate;
     seller;
     bodyType;
     images;
@@ -47,9 +51,25 @@ __decorate([
     __metadata("design:type", Date)
 ], Car.prototype, "auctionEndTime", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, enum: ['active', 'sold', 'ended'], default: 'active' }),
+    (0, mongoose_1.Prop)({ required: true, enum: ['active', 'sold', 'ended', 'completed'], default: 'active' }),
     __metadata("design:type", String)
 ], Car.prototype, "status", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ enum: ['not_paid', 'ready_for_shipping', 'in_transit', 'delivered'], default: 'not_paid' }),
+    __metadata("design:type", String)
+], Car.prototype, "shippingStatus", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], Car.prototype, "lotNumber", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", Date)
+], Car.prototype, "winningDate", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", Date)
+], Car.prototype, "endDate", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId, ref: 'User', required: true }),
     __metadata("design:type", Object)

@@ -59,6 +59,26 @@ let CarsService = class CarsService {
     async findBySeller(userId) {
         return this.carModel.find({ seller: userId }).exec();
     }
+    async payForCar(id) {
+        const car = await this.carModel.findByIdAndUpdate(id, {
+            shippingStatus: 'ready_for_shipping',
+            winningDate: new Date(),
+            lotNumber: `LOT-${Math.floor(Math.random() * 900000) + 100000}`
+        }, { new: true });
+        if (!car)
+            throw new common_1.NotFoundException('Car not found');
+        return car;
+    }
+    async updateShippingStatus(id, shippingStatus) {
+        const update = { shippingStatus };
+        if (shippingStatus === 'delivered') {
+            update.status = 'completed';
+        }
+        const car = await this.carModel.findByIdAndUpdate(id, update, { new: true });
+        if (!car)
+            throw new common_1.NotFoundException('Car not found');
+        return car;
+    }
 };
 exports.CarsService = CarsService;
 exports.CarsService = CarsService = __decorate([

@@ -14,6 +14,7 @@ const bids_service_1 = require("./bids.service");
 const bids_controller_1 = require("./bids.controller");
 const bid_gateway_1 = require("./bid.gateway");
 const cars_module_1 = require("../cars/cars.module");
+const notifications_module_1 = require("../notifications/notifications.module");
 let BidsModule = class BidsModule {
 };
 exports.BidsModule = BidsModule;
@@ -21,7 +22,8 @@ exports.BidsModule = BidsModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([{ name: bid_schema_1.Bid.name, schema: bid_schema_1.BidSchema }]),
-            cars_module_1.CarsModule
+            cars_module_1.CarsModule,
+            notifications_module_1.NotificationsModule
         ],
         controllers: [bids_controller_1.BidsController],
         providers: [bids_service_1.BidsService, bid_gateway_1.BidGateway],

@@ -21,8 +21,20 @@ export class Car {
   @Prop({ required: true })
   auctionEndTime: Date;
 
-  @Prop({ required: true, enum: ['active', 'sold', 'ended'], default: 'active' })
+  @Prop({ required: true, enum: ['active', 'sold', 'ended', 'completed'], default: 'active' })
   status: string;
+
+  @Prop({ enum: ['not_paid', 'ready_for_shipping', 'in_transit', 'delivered'], default: 'not_paid' })
+  shippingStatus: string;
+
+  @Prop()
+  lotNumber?: string;
+
+  @Prop()
+  winningDate?: Date;
+
+  @Prop()
+  endDate?: Date;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   seller: Types.ObjectId | User;

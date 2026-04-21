@@ -1,301 +1,390 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../lib/axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
+import { updateUser } from '../../store/userSlice';
+import { markAsRead, clearAll, fetchNotifications, markAllAsReadServer, clearAllServer, markAsReadServer } from '../../store/notificationSlice';
+import { AppDispatch } from '../../store/store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Edit } from 'lucide-react';
+import { ChevronRight, Star, Edit } from 'lucide-react';
 
-export default function Profile() {
+export default function ProfilePage() {
   const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
+  const { notifications } = useSelector((state: RootState) => state.notifications);
   const router = useRouter();
-  
-  const [myBids, setMyBids] = useState<any[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const [activeTab, setActiveTab] = useState('Personal Information');
   const [myCars, setMyCars] = useState<any[]>([]);
-  const [profile, setProfile] = useState<any>(null);
-  
-  const [activeTab, setActiveTab] = useState<'personal' | 'cars' | 'bids' | 'wishlist'>('personal');
+  const [myBids, setMyBids] = useState<any[]>([]);
+  const [myWishlist, setMyWishlist] = useState<any[]>([]);
+  const [allCars, setAllCars] = useState<any[]>([]);
 
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/login');
       return;
     }
+    fetchData();
+  }, [isAuthenticated]);
 
-    Promise.all([
-      axiosInstance.get('/users/profile'),
-      axiosInstance.get('/bids/user/my-bids'),
-      axiosInstance.get('/cars/user/my-cars')
-    ]).then(([profRes, bidsRes, carsRes]) => {
-      setProfile(profRes.data);
+  const fetchData = async () => {
+    try {
+      const carsRes = await axiosInstance.get('/cars');
+      const rawCars = carsRes.data;
+      
+      setAllCars(rawCars);
+      setMyCars(rawCars.filter((c: any) => c.userId === user?._id));
+
+      const bidsRes = await axiosInstance.get('/bids/user/my-bids');
       setMyBids(bidsRes.data);
-      setMyCars(carsRes.data);
-    }).catch(err => console.error(err));
-  }, [isAuthenticated, router]);
 
-  if (!profile) return <div className="min-h-screen flex items-center justify-center bg-white"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue"></div></div>;
+      const userRes = await axiosInstance.get('/users/profile');
+      setMyWishlist(userRes.data.wishlist || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleRemoveFromWishlist = async (carId: string) => {
+    try {
+      await axiosInstance.delete(`/users/wishlist/${carId}`);
+      setMyWishlist(prev => prev.filter(c => c._id !== carId));
+      
+      // Also update Redux store
+      if (user && user.wishlist) {
+        const newWishlist = user.wishlist.filter((item: any) => 
+          (typeof item === 'string' ? item : item._id) !== carId
+        );
+        dispatch(updateUser({ wishlist: newWishlist }));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEndBid = async (carId: string) => {
+    try {
+      await axiosInstance.patch(`/cars/${carId}`, { status: 'ended' });
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const tabs = ['Personal Information', 'My Cars', 'My Bids', 'Wishlist', 'Notifications'];
 
   return (
-    <div className="min-h-screen flex flex-col bg-white pb-20">
-      {/* Page Header */}
-      <div className="bg-brand-lightest w-full py-20 pb-24 text-center border-b border-slate-200">
-        <h1 className="text-5xl md:text-7xl font-bold text-brand-blue mb-4">My Profile</h1>
-        <p className="text-slate-600 max-w-lg mx-auto">
-          Lorem ipsum dolor sit amet consectetur. At in pretium semper vitae eu eu mus.
-        </p>
-        <div className="mt-4 text-sm text-slate-500">
-           <span>Home</span> <span className="mx-2">&gt;</span> <span className="text-brand-blue font-semibold">My Profile</span>
+    <div className="min-h-screen bg-white">
+      {/* Page Banner */}
+      <div className="page-banner pt-8 pb-8">
+        <h1>My Profile</h1>
+        <div className="divider mx-auto" />
+        <p className="max-w-xl mx-auto text-sm text-white/80">Lorem ipsum dolor sit amet consectetur. At in pretium semper vitae eu eu mus.</p>
+        <div className="breadcrumb mt-4 flex justify-center">
+          <Link href="/">Home</Link>
+          <ChevronRight size={14} className="mx-2" />
+          <span className="text-white font-medium italic">My Profile</span>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto w-full px-6 mt-12 flex flex-col md:flex-row gap-10">
-        
-        {/* Sidebar */}
-        <div className="w-full md:w-1/4">
-           <div className="flex flex-col space-y-4">
-              <button 
-                 onClick={() => setActiveTab('personal')}
-                 className={`text-left px-6 py-4 rounded border transition-colors shadow-sm relative overflow-hidden ${activeTab === 'personal' ? 'bg-brand-lightest/40 border-brand-lightest text-brand-dark font-bold' : 'bg-white border-slate-100 text-slate-600 font-semibold hover:bg-slate-50'}`}
-              >
-                 Personal Information
-                 {activeTab === 'personal' && <div className="absolute right-0 top-0 bottom-0 w-1 bg-brand-orange"></div>}
-              </button>
-              
-              <button 
-                 onClick={() => setActiveTab('cars')}
-                 className={`text-left px-6 py-4 rounded border transition-colors shadow-sm relative overflow-hidden ${activeTab === 'cars' ? 'bg-brand-lightest/40 border-brand-lightest text-brand-dark font-bold' : 'bg-white border-slate-100 text-slate-600 font-semibold hover:bg-slate-50'}`}
-              >
-                 My Cars
-                 {activeTab === 'cars' && <div className="absolute right-0 top-0 bottom-0 w-1 bg-brand-orange"></div>}
-              </button>
-              
-              <button 
-                 onClick={() => setActiveTab('bids')}
-                 className={`text-left px-6 py-4 rounded border transition-colors shadow-sm relative overflow-hidden ${activeTab === 'bids' ? 'bg-brand-lightest/40 border-brand-lightest text-brand-dark font-bold' : 'bg-white border-slate-100 text-slate-600 font-semibold hover:bg-slate-50'}`}
-              >
-                 My Bids
-                 {activeTab === 'bids' && <div className="absolute right-0 top-0 bottom-0 w-1 bg-brand-orange"></div>}
-              </button>
-              
-              <button 
-                 onClick={() => setActiveTab('wishlist')}
-                 className={`text-left px-6 py-4 rounded border transition-colors shadow-sm relative overflow-hidden ${activeTab === 'wishlist' ? 'bg-brand-lightest/40 border-brand-lightest text-brand-dark font-bold' : 'bg-white border-slate-100 text-slate-600 font-semibold hover:bg-slate-50'}`}
-              >
-                 Wishlist
-                 {activeTab === 'wishlist' && <div className="absolute right-0 top-0 bottom-0 w-1 bg-brand-orange"></div>}
-              </button>
-           </div>
-        </div>
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar */}
+          <aside className="w-full lg:w-64 flex-shrink-0">
+            <div className="space-y-1">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`w-full text-left px-4 py-3 text-sm font-medium rounded transition-colors border-l-4 ${
+                    activeTab === tab
+                      ? 'border-accent text-primary bg-primary/5'
+                      : 'border-transparent text-text-body hover:text-primary hover:bg-gray-50'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </aside>
 
-        {/* Content Area */}
-        <div className="w-full md:w-3/4">
-          
-          {activeTab === 'personal' && (
-             <div className="space-y-8">
-                
-                {/* Personal Information Block */}
-                <div className="rounded overflow-hidden shadow-sm border border-slate-100 bg-brand-lightest/30">
-                   <div className="bg-brand-blue text-white px-6 py-3 flex justify-between items-center">
-                      <h3 className="font-semibold text-sm">Personal Information</h3>
-                      <Edit size={16} className="cursor-pointer hover:text-brand-orange transition-colors" />
-                   </div>
-                   <div className="p-8 flex flex-col md:flex-row gap-8 items-center md:items-start text-sm">
-                      <img src="https://i.pravatar.cc/150?img=11" alt="Avatar" className="w-24 h-24 rounded-full border-4 border-white shadow-sm" />
-                      <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 w-full mt-2">
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">Full Name</span>
-                            <span className="text-slate-500">{profile.name}</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">Email</span>
-                            <span className="text-slate-500">{profile.email}</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">Mobile Number</span>
-                            <span className="text-slate-500">1234567890</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">Nationality</span>
-                            <span className="text-slate-500">India</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">ID Type</span>
-                            <span className="text-slate-500">India</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">ID Number</span>
-                            <span className="text-slate-500">345203</span>
-                         </div>
+          {/* Content Area */}
+          <div className="flex-1">
+            {/* Tab Title */}
+            <div className="mb-6 border-b border-border pb-3">
+              <h2 className="text-lg font-bold text-text-dark">{activeTab}</h2>
+            </div>
+
+            {/* PERSONAL INFORMATION */}
+            {activeTab === 'Personal Information' && (
+              <div className="space-y-6">
+                {/* Personal Info Section */}
+                <div className="border border-border rounded-lg overflow-hidden shadow-sm">
+                  <div className="bg-primary text-white px-6 py-3 flex items-center justify-between">
+                    <span className="font-bold text-xs uppercase tracking-widest">Personal Information</span>
+                    <button className="text-white/70 hover:text-white"><Edit size={16} /></button>
+                  </div>
+                  <div className="p-6">
+                    <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+                      <div className="h-20 w-20 rounded-full bg-gray-100 overflow-hidden flex-shrink-0 border border-border">
+                        <img
+                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || 'User'}`}
+                          alt="Avatar"
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                   </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4 flex-1 w-full">
+                        <div>
+                          <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Full Name</p>
+                          <p className="text-sm font-medium text-text-dark">{user?.name || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Email</p>
+                          <p className="text-sm font-medium text-text-dark">{user?.email || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Mobile</p>
+                          <p className="text-sm font-medium text-text-dark">{user?.phone || '1234567890'}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Nationality</p>
+                          <p className="text-sm font-medium text-text-dark">UAE</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Password Block */}
-                <div className="rounded overflow-hidden shadow-sm border border-slate-100 bg-brand-lightest/30">
-                   <div className="bg-brand-blue text-white px-6 py-3 flex justify-between items-center">
-                      <h3 className="font-semibold text-sm">Password</h3>
-                      <Edit size={16} className="cursor-pointer hover:text-brand-orange transition-colors" />
-                   </div>
-                   <div className="p-6 text-sm">
-                      <div className="flex gap-4">
-                         <span className="font-bold text-brand-dark w-24">Password</span>
-                         <span className="text-slate-400">*********</span>
+                {/* Other standard sections... */}
+              </div>
+            )}
+
+            {/* MY CARS */}
+            {activeTab === 'My Cars' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {myCars.length > 0 ? myCars.map((car) => (
+                  <div key={car._id} className="card group">
+                    <div className="relative">
+                      <div className="text-center pt-4 pb-2 px-4">
+                        <h3 className="text-sm font-bold text-text-dark tracking-tight">{car.make} {car.model}</h3>
                       </div>
-                   </div>
-                </div>
-
-                {/* Address Block */}
-                <div className="rounded overflow-hidden shadow-sm border border-slate-100 bg-brand-lightest/30">
-                   <div className="bg-brand-blue text-white px-6 py-3 flex justify-between items-center">
-                      <h3 className="font-semibold text-sm">Address</h3>
-                      <Edit size={16} className="cursor-pointer hover:text-brand-orange transition-colors" />
-                   </div>
-                   <div className="p-6 text-sm">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">Country</span>
-                            <span className="text-slate-500">India</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">City</span>
-                            <span className="text-slate-500">India</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">Address 1</span>
-                            <span className="text-slate-500">India</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">Address 2</span>
-                            <span className="text-slate-500">Manish Sharma</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">Land Line Number</span>
-                            <span className="text-slate-500">345203</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-24">P.O Box</span>
-                            <span className="text-slate-500">345203</span>
-                         </div>
+                      <div className="h-44 px-4 pb-2 overflow-hidden bg-white">
+                        <img
+                         src={car.images?.[0] ? `http://localhost:3001/${car.images[0]}` : 'http://localhost:3001/hero_section_bg_img.jpg'}
+                          alt={`${car.make} ${car.model}`}
+                          className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform"
+                        />
                       </div>
-                   </div>
-                </div>
-
-                {/* Traffic File Information Block */}
-                <div className="rounded overflow-hidden shadow-sm border border-slate-100 bg-brand-lightest/30">
-                   <div className="bg-brand-blue text-white px-6 py-3 flex justify-between items-center">
-                      <h3 className="font-semibold text-sm">Traffic File Information</h3>
-                      <Edit size={16} className="cursor-pointer hover:text-brand-orange transition-colors" />
-                   </div>
-                   <div className="p-6 text-sm">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-40">Traffic Information Type</span>
-                            <span className="text-slate-500">******</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-40">Plate State</span>
-                            <span className="text-slate-500"></span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-40">Traffic File Number</span>
-                            <span className="text-slate-500">Manish Sharma</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-40">Plate Code</span>
-                            <span className="text-slate-500"></span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-40">Plate Number</span>
-                            <span className="text-slate-500">Manish Sharma</span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-40">Driver License Number</span>
-                            <span className="text-slate-500"></span>
-                         </div>
-                         <div className="flex justify-between md:justify-start gap-4">
-                            <span className="font-bold text-brand-dark w-40">Issue City</span>
-                            <span className="text-slate-500"></span>
-                         </div>
+                    </div>
+                    <div className="px-4 pb-4">
+                      <div className="flex items-center justify-between mb-3 mt-3">
+                        <div>
+                          <p className="text-base font-bold text-primary italic">${car.price?.toLocaleString()}</p>
+                          <p className="text-[10px] font-bold text-text-light uppercase tracking-widest">Winning Bid</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-bold text-text-dark">130</p>
+                          <p className="text-[10px] font-bold text-text-light uppercase tracking-widest">Total Bids</p>
+                        </div>
                       </div>
-                   </div>
-                </div>
+                      {car.status === 'active' ? (
+                        <button
+                          onClick={() => handleEndBid(car._id)}
+                          className="w-full bg-primary hover:bg-primary-dark text-white py-2.5 rounded text-xs font-bold uppercase tracking-widest transition-all shadow-md"
+                        >
+                          End Bid
+                        </button>
+                      ) : (
+                        <div className="w-full bg-gray-100 text-text-light py-2.5 rounded text-xs font-bold uppercase tracking-widest text-center border border-border">
+                          Sold
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )) : (
+                  <div className="col-span-full py-16 text-center text-text-light bg-gray-50 rounded-lg">
+                    <p className="text-lg font-semibold mb-2">No cars listed yet</p>
+                    <Link href="/sell" className="text-primary hover:underline text-sm font-bold">Sell Your Car →</Link>
+                  </div>
+                )}
+              </div>
+            )}
 
-             </div>
-          )}
-
-          {activeTab === 'cars' && (
-             <div className="bg-brand-lightest/30 rounded p-6 shadow-sm border border-slate-100">
-               <div className="flex justify-between items-center mb-6">
-                 <h2 className="text-xl font-bold text-brand-dark">My Cars</h2>
-                 <Link href="/sell" className="bg-brand-blue text-white font-bold px-6 py-2 rounded hover:bg-brand-dark shadow-sm transition-colors text-sm">List New Car</Link>
-               </div>
-               {myCars.length === 0 ? <p className="text-slate-500 text-center py-10">You haven't listed any cars.</p> : (
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                   {myCars.map(car => (
-                     <div key={car._id} className="bg-white border hover:shadow-md transition-shadow border-slate-100 rounded overflow-hidden group">
-                       <div className="h-48 bg-slate-200">
-                          {car.images?.length ? <img src={car.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-transform" /> : null}
-                       </div>
-                       <div className="p-4">
-                          <h3 className="font-bold text-brand-dark line-clamp-1 text-lg mb-2">{car.year} {car.make} {car.model}</h3>
-                          <div className="flex justify-between items-center">
-                            <p className="font-bold text-brand-blue">${car.price.toLocaleString()}</p>
-                            <span className="inline-block px-3 py-1 bg-brand-lightest text-brand-blue rounded text-xs font-bold uppercase">{car.status}</span>
+            {/* MY BIDS */}
+            {activeTab === 'My Bids' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {myBids.length > 0 ? myBids.map((bid: any, i) => {
+                  const carIdMatch = bid.car?._id || bid.car || bid.carId;
+                  const car = allCars.find((c: any) => String(c._id) === String(carIdMatch)) || bid.car || {
+                      make: 'Unknown', model: 'Car', price: 0, images: [], _id: carIdMatch, status: 'ended'
+                  };
+                  return (
+                    <div key={i} className="card group">
+                      <div className="relative">
+                        <button className="absolute top-3 right-3 z-10 text-text-light hover:text-accent transition-colors">
+                          <Star size={18} />
+                        </button>
+                        <div className="text-center pt-4 pb-2 px-4">
+                          <h3 className="text-sm font-bold text-text-dark tracking-tight">{car.make} {car.model}</h3>
+                        </div>
+                        <div className="h-44 px-4 pb-2 overflow-hidden bg-white">
+                          <img
+                            src={car.images?.[0] ? (car.images[0].startsWith('http') ? car.images[0] : `http://localhost:3001/${car.images[0]}`) : 'http://localhost:3001/hero_section_bg_img.jpg'}
+                            alt={`${car.make} ${car.model}`}
+                            className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform"
+                          />
+                        </div>
+                      </div>
+                      <div className="px-4 pb-4">
+                        <div className="flex items-center justify-between mt-3 mb-2 gap-2">
+                          <div className="border border-border rounded p-2 flex-1">
+                            <p className="text-xs font-bold text-primary italic">${car.price?.toLocaleString()}</p>
+                            <p className="text-[9px] font-bold text-text-light uppercase tracking-widest">Winning Bid</p>
                           </div>
-                       </div>
-                     </div>
-                   ))}
-                 </div>
-               )}
-             </div>
-          )}
+                          <div className="border border-border rounded p-2 flex-1">
+                            <p className="text-xs font-bold text-red-500 italic">${(bid.amount || 0).toLocaleString()}</p>
+                            <p className="text-[9px] font-bold text-text-light uppercase tracking-widest">Your Bid</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-1">
+                            {['31', '20', '40', '25'].map((t, idx) => (
+                              <span key={idx} className="bg-primary text-white text-[9px] font-bold px-1 py-0.5 rounded">{t}</span>
+                            ))}
+                            <p className="text-[9px] font-bold text-text-light ml-1 uppercase">Left</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs font-bold text-text-dark">130</p>
+                            <p className="text-[9px] font-bold text-text-light uppercase tracking-widest">Total</p>
+                          </div>
+                        </div>
+                        <Link
+                          href={`/auctions/${car._id}`}
+                          className="w-full block bg-primary hover:bg-primary-dark text-white py-2.5 rounded text-xs font-bold uppercase tracking-widest transition-all shadow-md text-center"
+                        >
+                          View Auction
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                }) : (
+                  <div className="col-span-full py-16 text-center text-text-light bg-gray-50 rounded-lg">
+                    <p className="text-lg font-semibold mb-2">No bids placed yet</p>
+                    <Link href="/auctions" className="text-primary hover:underline text-sm font-bold">Browse Auctions →</Link>
+                  </div>
+                )}
+              </div>
+            )}
 
-          {activeTab === 'bids' && (
-             <div className="bg-brand-lightest/30 rounded p-6 shadow-sm border border-slate-100">
-               <h2 className="text-xl font-bold text-brand-dark mb-6">My Bids</h2>
-               {myBids.length === 0 ? <p className="text-slate-500 text-center py-10">You haven't placed any bids yet.</p> : (
-                 <div className="space-y-4">
-                   {myBids.map(bid => (
-                     <div key={bid._id} className="flex justify-between items-center p-4 bg-white border border-slate-100 rounded hover:shadow-sm transition-shadow">
-                       <div>
-                          <Link href={`/auctions/${bid.car?._id}`} className="font-bold text-lg text-brand-dark hover:text-brand-blue transition-colors">
-                            {bid.car?.year} {bid.car?.make} {bid.car?.model}
-                          </Link>
-                          <p className="text-xs text-slate-400 mt-1">{new Date(bid.timestamp).toLocaleString()}</p>
-                       </div>
-                       <div className="text-right">
-                         <p className="text-[10px] font-semibold text-slate-400 uppercase">Your Bid</p>
-                         <p className="font-black text-brand-blue text-xl">${bid.amount.toLocaleString()}</p>
-                       </div>
-                     </div>
-                   ))}
-                 </div>
-               )}
-             </div>
-          )}
+            {/* WISHLIST */}
+            {activeTab === 'Wishlist' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {myWishlist.length > 0 ? myWishlist.map((car: any, i: number) => (
+                    <div key={i} className="card group">
+                      <div className="relative">
+                        <button 
+                          onClick={() => handleRemoveFromWishlist(car._id)}
+                          className="absolute top-3 right-3 z-10 text-accent transition-colors hover:scale-110 active:scale-95"
+                        >
+                          <Star size={18} fill="currentColor" />
+                        </button>
+                        <div className="text-center pt-4 pb-2 px-4">
+                          <h3 className="text-sm font-bold text-text-dark tracking-tight">{car.make} {car.model}</h3>
+                        </div>
+                        <div className="h-44 px-4 pb-2 overflow-hidden bg-white">
+                          <img
+                            src={car.images?.[0] ? (car.images[0].startsWith('http') ? car.images[0] : `http://localhost:3001/${car.images[0]}`) : 'http://localhost:3001/hero_section_bg_img.jpg'}
+                            alt={`${car.make} ${car.model}`}
+                            className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform"
+                          />
+                        </div>
+                      </div>
+                      <div className="px-4 pb-4">
+                        <div className="flex items-center justify-between mb-3 mt-3">
+                          <div>
+                            <p className="text-base font-bold text-primary italic">${car.price?.toLocaleString()}</p>
+                            <p className="text-[10px] font-bold text-text-light uppercase tracking-widest">Current Bid</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs font-bold text-text-dark tabular-nums">10 : 20 : 47</p>
+                            <p className="text-[10px] font-bold text-text-light uppercase tracking-widest">Left</p>
+                          </div>
+                        </div>
+                        <Link href={`/auctions/${car._id}`} className="block text-center w-full bg-primary hover:bg-primary-dark text-white py-2.5 rounded text-xs font-bold uppercase tracking-widest transition-all shadow-md">
+                          Submit A Bid
+                        </Link>
+                      </div>
+                    </div>
+                )) : (
+                  <div className="col-span-full py-16 text-center text-text-light bg-gray-50 rounded-lg">
+                    <p className="text-lg font-semibold mb-2">Your wishlist is empty</p>
+                    <Link href="/auctions" className="text-primary hover:underline text-sm font-bold">Find Cars to Add →</Link>
+                  </div>
+                )}
+              </div>
+            )}
 
-          {activeTab === 'wishlist' && (
-             <div className="bg-brand-lightest/30 rounded p-6 shadow-sm border border-slate-100">
-               <h2 className="text-xl font-bold text-brand-dark mb-6">Wishlist</h2>
-               {profile.wishlist?.length === 0 ? <p className="text-slate-500 text-center py-10">Your wishlist is empty.</p> : (
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 {profile.wishlist.map((car: any) => (
-                   <Link href={`/auctions/${car._id}`} key={car._id} className="bg-white border rounded overflow-hidden hover:shadow-md transition-all group">
-                     <div className="h-48 bg-slate-200">
-                        {car.images?.length ? <img src={car.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-transform" /> : null}
-                     </div>
-                     <div className="p-4">
-                        <h3 className="font-bold text-brand-dark line-clamp-1">{car.year} {car.make} {car.model}</h3>
-                     </div>
-                   </Link>
-                 ))}
-               </div>
-               )}
-             </div>
-          )}
-
+            {/* Notifications Tab */}
+            {activeTab === 'Notifications' && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-bold text-text-dark">Recent Notifications</h2>
+                  {notifications.length > 0 && (
+                    <button 
+                      onClick={() => dispatch(clearAllServer())}
+                      className="text-xs font-bold text-red-500 hover:underline"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+                {notifications.length > 0 ? (
+                  <div className="space-y-3">
+                    {notifications.map((n: any) => (
+                      <div 
+                        key={n.id} 
+                        onClick={() => dispatch(markAsReadServer(n.id))}
+                        className={`p-4 rounded-lg border transition-all cursor-pointer ${
+                          !n.read 
+                            ? 'bg-primary/5 border-primary/20 shadow-sm' 
+                            : 'bg-white border-border hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <p className={`text-sm ${!n.read ? 'font-bold text-primary' : 'text-text-dark'}`}>
+                              {n.message}
+                            </p>
+                            {n.carId && (
+                              <Link 
+                                href={`/auctions/${n.carId}`}
+                                className="inline-block mt-3 text-[10px] font-bold text-primary hover:underline uppercase tracking-widest border border-primary/20 px-2 py-1 rounded bg-white"
+                              >
+                                View Auction →
+                              </Link>
+                            )}
+                          </div>
+                          <span className="text-[10px] text-text-light whitespace-nowrap ml-4">
+                            {new Date(n.timestamp).toLocaleString()}
+                          </span>
+                        </div>
+                        {!n.read && (
+                          <span className="inline-block mt-2 px-2 py-0.5 bg-accent text-[9px] font-bold text-white rounded uppercase tracking-tighter">New</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-20 bg-gray-50 rounded-xl border-2 border-dashed border-border">
+                    <p className="text-text-light italic">No notifications yet.</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

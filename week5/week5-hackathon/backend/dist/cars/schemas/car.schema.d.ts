@@ -8,6 +8,10 @@ export declare class Car {
     price: number;
     auctionEndTime: Date;
     status: string;
+    shippingStatus: string;
+    lotNumber?: string;
+    winningDate?: Date;
+    endDate?: Date;
     seller: Types.ObjectId | User;
     bodyType: string;
     images: string[];
@@ -79,6 +83,42 @@ export declare const CarSchema: import("mongoose").Schema<Car, import("mongoose"
         id: string;
     }> | undefined;
     status?: import("mongoose").SchemaDefinitionProperty<string, Car, Document<unknown, {}, Car, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Car & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    shippingStatus?: import("mongoose").SchemaDefinitionProperty<string, Car, Document<unknown, {}, Car, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Car & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    lotNumber?: import("mongoose").SchemaDefinitionProperty<string | undefined, Car, Document<unknown, {}, Car, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Car & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    winningDate?: import("mongoose").SchemaDefinitionProperty<Date | undefined, Car, Document<unknown, {}, Car, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Car & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    endDate?: import("mongoose").SchemaDefinitionProperty<Date | undefined, Car, Document<unknown, {}, Car, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Car & {
         _id: Types.ObjectId;

@@ -41,4 +41,16 @@ export class BidsService {
   async getBidsByUser(userId: string) {
     return this.bidModel.find({ bidder: userId }).populate('car').exec();
   }
+
+  async getCarById(carId: string) {
+    return this.carsService.findById(carId);
+  }
+
+  async payForCar(carId: string) {
+    return this.carsService.payForCar(carId);
+  }
+
+  async updateShippingStatus(carId: string, status: string) {
+    return this.carsService.updateShippingStatus(carId, status);
+  }
 }

@@ -21,4 +21,6 @@ export declare class CarsService {
         id: string;
     }) | null>;
     findBySeller(userId: string): Promise<CarDocument[]>;
+    payForCar(id: string): Promise<CarDocument>;
+    updateShippingStatus(id: string, shippingStatus: string): Promise<CarDocument>;
 }

@@ -6,41 +6,32 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { io, Socket } from 'socket.io-client';
 import { API_URL } from '../../../lib/axios';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Star, Minus, Plus } from 'lucide-react';
+import Link from 'next/link';
+import { Star, Minus, Plus, ChevronRight } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { updateUser } from '../../../store/userSlice';
+import { resolveCarDesign } from '../../../lib/car-utils';
 
 export default function LiveAuctionDetail({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const { id } = resolvedParams;
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
-  
+
   const [car, setCar] = useState<any>(null);
   const [bids, setBids] = useState<any[]>([]);
   const [bidAmount, setBidAmount] = useState<number>(0);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+  const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
-    // Fetch car details and initial bids
-    const fetchData = async () => {
-      try {
-        const carRes = await axiosInstance.get(`/cars/${id}`);
-        setCar(carRes.data);
-        setBidAmount(carRes.data.price + 100);
-
-        const bidsRes = await axiosInstance.get(`/bids/car/${id}`);
-        setBids(bidsRes.data);
-
-      } catch (err) {
-        console.error(err);
-      }
-    };
     fetchData();
 
-    // Setup Socket
     const newSocket = io(API_URL);
     setSocket(newSocket);
 
@@ -49,7 +40,7 @@ export default function LiveAuctionDetail({ params }: { params: Promise<{ id: st
     });
 
     newSocket.on('new_bid', (data) => {
-      setBids((prev) => [data, ...prev].sort((a,b) => b.amount - a.amount));
+      setBids((prev) => [data, ...prev].sort((a, b) => b.amount - a.amount));
       setCar((prev: any) => ({ ...prev, price: data.amount }));
     });
 
@@ -58,285 +49,349 @@ export default function LiveAuctionDetail({ params }: { params: Promise<{ id: st
       setTimeout(() => setErrorMsg(''), 5000);
     });
 
+    // Optional: listen for success confirmation from server if it exists
+    newSocket.on('bid_success', (data) => {
+      setSuccessMsg('Bid placed successfully!');
+      setTimeout(() => setSuccessMsg(''), 5000);
+    });
+
     newSocket.on('bid_ended', () => {
       setCar((prev: any) => ({ ...prev, status: 'ended' }));
     });
 
-    return () => {
-      newSocket.disconnect();
-    };
+    return () => { newSocket.disconnect(); };
   }, [id]);
+
+  const fetchData = async () => {
+    try {
+      const carRes = await axiosInstance.get(`/cars/${id}`);
+      let carData = resolveCarDesign(carRes.data);
+      
+      // If mock ID and not found or needed specifically
+      if (id.startsWith('mock-')) {
+          carData = resolveCarDesign({
+              _id: id,
+              price: 20000,
+              description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac sodales vulputate dolor volutpat ac. Turpis ut neque eu adipiscing nibh nunc gravida. Ipsum at feugiat id dui elementum nibh nec suspendisse. Ut sapien metus elementum tincidunt euismod.',
+              lotNumber: '379831',
+              mileage: 10878,
+              status: 'active'
+          });
+      }
+
+      setCar(carData);
+      setBidAmount(carData.price + 500);
+
+      const bidsRes = await axiosInstance.get(`/bids/car/${id}`);
+      setBids(bidsRes.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handlePlaceBid = () => {
     if (!isAuthenticated) return router.push('/login');
+    if (!user?._id) {
+        setErrorMsg('User information is missing. Please log in again.');
+        return;
+    }
     if (!socket) return;
     socket.emit('place_bid', { carId: id, userId: user._id, amount: bidAmount });
+    
+    // Optimistic success UI feedback
+    setSuccessMsg('Bid submitted successfully!');
+    setTimeout(() => setSuccessMsg(''), 5000);
   };
 
-  if (!car) return <div className="min-h-screen flex items-center justify-center bg-white"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue"></div></div>;
+  const handleToggleWishlist = async () => {
+    if (!isAuthenticated) return router.push('/login');
 
-  const demoImages = car.images?.length > 1 ? car.images : [
-    car.images?.[0] || 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1627454820516-dc767119ff33?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1550529590-7bf78afebfcc?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80'
-  ];
+    const isInWishlist = user?.wishlist?.some((item: any) => 
+      (typeof item === 'string' ? item : item._id) === id
+    );
+
+    try {
+      if (isInWishlist) {
+        await axiosInstance.delete(`/users/wishlist/${id}`);
+        const newWishlist = user.wishlist.filter((item: any) => 
+          (typeof item === 'string' ? item : item._id) !== id
+        );
+        dispatch(updateUser({ wishlist: newWishlist }));
+      } else {
+        await axiosInstance.post(`/users/wishlist/${id}`);
+        const newWishlist = [...(user.wishlist || []), id];
+        dispatch(updateUser({ wishlist: newWishlist }));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (!car) return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+
+  const images = [...(car.images || [])].map((img: string) => img.startsWith('http') ? img : `http://localhost:3001/${img}`);
+  if (images.length === 0) images.push('https://via.placeholder.com/800x450');
+
+  const isWinner = car.status === 'ended' && bids[0]?.userId === user?._id;
+  const topBidder = bids[0];
 
   return (
-    <div className="min-h-screen flex flex-col bg-white pb-20">
-      {/* Page Header */}
-      <div className="bg-brand-lightest w-full py-20 pb-24 text-center border-b border-slate-200">
-        <h1 className="text-5xl md:text-7xl font-bold text-brand-blue mb-4">{car.make ? `${car.make} ${car.model}` : "Audi Q3"}</h1>
-        <p className="text-slate-600 max-w-lg mx-auto">
-          Lorem ipsum dolor sit amet consectetur. At in pretium semper vitae eu eu mus.
-        </p>
-        <div className="mt-4 text-sm text-slate-500">
-           <span>Home</span> <span className="mx-2">&gt;</span> <span className="text-brand-blue font-semibold">Auction Detail</span>
+    <div className="min-h-screen bg-white">
+      {/* Page Banner */}
+      <div className="page-banner pt-8 pb-8">
+        <h1 className="text-4xl font-bold">{car.make} {car.model}</h1>
+        <div className="divider mx-auto" />
+        <p className="max-w-xl mx-auto text-sm text-white/80">Lorem ipsum dolor sit amet consectetur. At in pretium semper vitae eu eu mus.</p>
+        <div className="breadcrumb mt-4 flex justify-center">
+          <Link href="/">Home</Link>
+          <ChevronRight size={14} className="mx-2" />
+          <span className="text-white font-medium italic">Auction Detail</span>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto w-full px-6 -mt-8 relative z-10">
-        
-        {/* Title Bar */}
-        <div className="bg-brand-blue rounded-md p-4 flex justify-between items-center text-white mb-6 shadow-sm">
-           <h2 className="text-xl font-bold">{car.make ? `${car.make} ${car.model}` : "Audi Q3"}</h2>
-           <button className="text-white hover:text-brand-orange transition-colors">
-              <Star size={20} />
-           </button>
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        {errorMsg && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-center text-sm font-medium transition-all">
+            {errorMsg}
+          </div>
+        )}
+        {successMsg && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-600 text-center text-sm font-medium transition-all">
+            {successMsg}
+          </div>
+        )}
+
+        {/* Car Title Bar */}
+        <div className="bg-primary text-white rounded-t-lg px-6 py-3 flex items-center justify-between">
+          <h2 className="font-bold text-lg">{car.make} {car.model}</h2>
+          <button 
+            onClick={handleToggleWishlist}
+            className={`transition-colors ${
+            user?.wishlist?.some((item: any) => (typeof item === 'string' ? item : item._id) === id)
+            ? 'text-accent' 
+            : 'text-white/70 hover:text-accent'
+          }`}>
+            <Star size={20} fill={user?.wishlist?.some((item: any) => (typeof item === 'string' ? item : item._id) === id) ? "currentColor" : "none"} />
+          </button>
         </div>
 
-        {/* Top Notification if needed */}
-        {errorMsg && <div className="bg-red-50 text-red-500 p-3 rounded text-sm mb-6 text-center border border-red-100">{errorMsg}</div>}
-
-        {/* Gallery Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-           {/* Main Image */}
-           <div className="lg:col-span-2 relative rounded-md overflow-hidden bg-slate-100 h-[300px] md:h-[450px]">
-              <div className="absolute top-4 left-4 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-sm shadow z-10 flex items-center space-x-1">
-                 <span>Live</span>
-                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a9 9 0 0 0 0-6"/><path d="M4.6 15a9 9 0 0 1 0-6"/><path d="M22 17.7a13 13 0 0 0 0-11.4"/><path d="M2 17.7a13 13 0 0 1 0-11.4"/></svg>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 border border-border border-t-0">
+          {/* Left: Gallery */}
+          <div className="lg:col-span-8 p-6">
+            {/* Main Image */}
+            <div className="relative mb-6">
+              <div className="absolute top-3 left-3 z-10">
+                <span className="bg-red-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-sm uppercase tracking-wider">Live</span>
               </div>
-              <img src={demoImages[0]} alt="Main" className="w-full h-full object-cover" />
-           </div>
-           
-           {/* Thumbnails Grid */}
-           <div className="grid grid-cols-2 lg:grid-cols-2 grid-rows-3 gap-4 h-[300px] md:h-[450px]">
-              {demoImages.slice(1,7).map((img: string, idx: number) => (
-                 <div key={idx} className="rounded-md overflow-hidden bg-slate-100">
-                    <img src={img} alt={`Thumb ${idx}`} className="w-full h-full object-cover" />
-                 </div>
+              <div className="h-[350px] md:h-[450px] bg-white rounded-lg overflow-hidden border border-border">
+                <img src={images[activeImg]} alt="Car" className="w-full h-full object-contain p-4" />
+              </div>
+            </div>
+
+            {/* Thumbnails */}
+            <div className="grid grid-cols-5 gap-3">
+              {images.slice(0, 5).map((img: string, idx: number) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveImg(idx)}
+                  className={`h-24 md:h-28 rounded-lg overflow-hidden border-2 transition-all bg-white p-1 ${activeImg === idx ? 'border-primary' : 'border-border hover:border-primary/50'}`}
+                >
+                  <img src={img} className="w-full h-full object-contain" alt="Thumb" />
+                </button>
               ))}
-           </div>
+            </div>
+
+            {/* Stats Row */}
+            <div className="grid grid-cols-2 md:grid-cols-7 gap-1 mt-10 bg-primary/5 rounded-lg p-6 border border-primary/10">
+              <div className="border-r border-primary/10 px-2 text-center">
+                <div className="flex items-center justify-center space-x-1 mb-1">
+                  {['31', '20', '40', '25'].map((t, i) => (
+                    <span key={i} className="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded">{t}</span>
+                  ))}
+                </div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-text-light">Time Left</p>
+              </div>
+              <div className="border-r border-primary/10 px-2 text-center">
+                <p className="text-sm font-bold text-primary">${car.price?.toLocaleString()}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-text-light">Current Bid</p>
+              </div>
+              <div className="border-r border-primary/10 px-2 text-center">
+                <p className="text-sm font-bold text-text-dark">06:00pm</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-text-light">End Time</p>
+              </div>
+              <div className="border-r border-primary/10 px-2 text-center">
+                <p className="text-sm font-bold text-text-dark">100</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-text-light">Min. Inc.</p>
+              </div>
+              <div className="border-r border-primary/10 px-2 text-center">
+                <p className="text-sm font-bold text-text-dark">{bids.length || 130}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-text-light">Total Bids</p>
+              </div>
+              <div className="border-r border-primary/10 px-2 text-center">
+                <p className="text-sm font-bold text-text-dark">{car.lotNumber || '379831'}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-text-light">Lot No.</p>
+              </div>
+              <div className="px-2 text-center">
+                <p className="text-sm font-bold text-text-dark">{car.mileage?.toLocaleString() || '10,878K.M'}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-text-light">Odometer</p>
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="mt-12">
+              <h3 className="text-xl font-bold text-primary italic border-l-4 border-accent pl-4 mb-6">Description</h3>
+              <p className="text-sm text-text-body leading-relaxed mb-4">
+                {car.description}
+              </p>
+              <p className="text-sm text-text-body leading-relaxed">
+                In est eget turpis nulla leo amet arcu. Consequat viverra erat pellentesque ut non placerat placerat amet vitae. Lobortis velit senectus blandit pellentesque viverra augue dolor orci.
+              </p>
+            </div>
+          </div>
+
+          {/* Right: Bid Panel */}
+          <div className="lg:col-span-4 border-l border-border p-6 bg-gray-50/50">
+            {/* Bid Range */}
+            <div className="mb-8 border border-border rounded-lg p-5 bg-white shadow-sm">
+              <div className="flex justify-between mb-4">
+                <div>
+                  <p className="text-sm font-bold text-text-dark">$20,000</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-text-light">Bid Starts From</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-bold text-primary italic">${car.price?.toLocaleString()}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-text-light">Current Bid</p>
+                </div>
+              </div>
+              <input
+                type="range"
+                min={car.price - 5000}
+                max={car.price + 10000}
+                value={bidAmount}
+                onChange={(e) => setBidAmount(parseInt(e.target.value))}
+                className="w-full accent-primary h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
+
+            {/* Bid Amount Control */}
+            <div className="mb-8 p-5 bg-white border border-border rounded-lg shadow-sm">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-text-dark">{bids.length || 130}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-text-light">Bid Placed</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setBidAmount(prev => Math.max(car.price, prev - 500))}
+                    className="h-10 w-10 border border-border rounded flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-sm"
+                  >
+                    <Minus size={16} />
+                  </button>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={`$${bidAmount.toLocaleString()}`}
+                      readOnly
+                      className="w-28 border border-border rounded px-2 h-10 text-center text-sm font-bold text-primary italic"
+                    />
+                  </div>
+                  <button
+                    onClick={() => setBidAmount(prev => prev + 500)}
+                    className="h-10 w-10 border border-border rounded flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-sm"
+                  >
+                    <Plus size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Submit Bid */}
+            {car.status === 'active' ? (
+              <button
+                onClick={handlePlaceBid}
+                className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-lg text-sm font-bold uppercase tracking-widest transition-all shadow-lg active:scale-95 mb-10"
+              >
+                Submit A Bid
+              </button>
+            ) : isWinner ? (
+              <button
+                onClick={() => router.push(`/payment/${car._id}`)}
+                className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-lg text-sm font-bold transition-all shadow-lg mb-10"
+              >
+                Proceed to Payment
+              </button>
+            ) : (
+              <div className="w-full bg-gray-100 text-text-light py-4 rounded-lg text-sm font-bold text-center mb-10 border border-border">
+                Auction Closed
+              </div>
+            )}
+
+            {/* Bidders List */}
+            <div className="border border-border rounded-lg overflow-hidden bg-white shadow-sm">
+              <div className="bg-primary text-white px-5 py-3 flex items-center">
+                <h4 className="text-xs font-bold uppercase tracking-widest">Bidders List</h4>
+              </div>
+              <div className="divide-y divide-border">
+                {(bids.length > 0 ? bids.slice(0, 5) : [
+                  { amount: 18000 },
+                  { amount: 16500 },
+                  { amount: 16000 },
+                ]).map((bid, i) => (
+                  <div key={i} className="flex justify-between items-center px-5 py-3">
+                    <span className="text-xs font-medium text-text-body">Bidder {i + 1}</span>
+                    <span className="text-xs font-black text-primary italic">${bid.amount?.toLocaleString()}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Info Strip */}
-        <div className="bg-white border text-center border-slate-200 rounded flex flex-wrap md:flex-nowrap justify-between items-center px-4 py-4 mb-10 shadow-sm overflow-x-auto divide-x divide-slate-100">
-           <div className="px-6 flex flex-col justify-center min-w-max">
-              <div className="flex space-x-1 mb-1">
-                 <div className="flex flex-col items-center">
-                   <div className="border border-slate-200 bg-brand-lightest/30 rounded text-xs font-bold w-6 h-6 flex items-center justify-center">31</div>
-                   <span className="text-[8px] text-slate-400 mt-1">Days</span>
-                 </div>
-                 <div className="flex flex-col items-center">
-                   <div className="border border-slate-200 bg-brand-lightest/30 rounded text-xs font-bold w-6 h-6 flex items-center justify-center">20</div>
-                   <span className="text-[8px] text-slate-400 mt-1">Hours</span>
-                 </div>
-                 <div className="flex flex-col items-center">
-                   <div className="border border-slate-200 bg-brand-lightest/30 rounded text-xs font-bold w-6 h-6 flex items-center justify-center">40</div>
-                   <span className="text-[8px] text-slate-400 mt-1">Mins</span>
-                 </div>
-                 <div className="flex flex-col items-center">
-                   <div className="border border-slate-200 bg-brand-lightest/30 rounded text-xs font-bold w-6 h-6 flex items-center justify-center">25</div>
-                   <span className="text-[8px] text-slate-400 mt-1">Secs</span>
-                 </div>
+        {/* Top Bidder Section */}
+        {topBidder || true ? (
+          <div className="mt-12 bg-white border border-border rounded-lg overflow-hidden shadow-sm">
+            <div className="bg-primary text-white px-6 py-3 flex items-center space-x-2">
+              <span className="font-bold text-xs uppercase tracking-widest">Top Bidder</span>
+            </div>
+            <div className="p-8">
+              <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-10">
+                <div className="h-24 w-24 rounded-full bg-primary/10 overflow-hidden flex-shrink-0 border-4 border-white shadow-xl">
+                  <img
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lionel"
+                    alt="Top Bidder"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-6 flex-1 text-center md:text-left">
+                  <div>
+                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Full Name</p>
+                    <p className="text-sm font-bold text-text-dark">Lionel Messi</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Email</p>
+                    <p className="text-sm font-bold text-text-dark">messi10@email.com</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Mobile Number</p>
+                    <p className="text-sm font-bold text-text-dark">1234567890</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Nationality</p>
+                    <p className="text-sm font-bold text-text-dark">Argentina</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">ID Type</p>
+                    <p className="text-sm font-bold text-text-dark">ID Card</p>
+                  </div>
+                </div>
               </div>
-              <span className="text-[10px] text-slate-400 font-semibold bg-white mt-1">Time Left</span>
-           </div>
-
-           <div className="px-6 flex flex-col items-center justify-center min-w-max text-left">
-              <span className="font-bold text-brand-blue mb-1">${car.price ? car.price.toLocaleString() : '1,078.99'}</span>
-              <span className="text-[10px] text-slate-400 font-semibold">Current Bid</span>
-           </div>
-           
-           <div className="px-6 flex flex-col items-center justify-center min-w-max text-left">
-              <span className="font-bold text-brand-blue mb-1">06:00pm 03 Jan 2023</span>
-              <span className="text-[10px] text-slate-400 font-semibold">End Time</span>
-           </div>
-
-           <div className="px-6 flex flex-col items-center justify-center min-w-max text-left">
-              <span className="font-bold text-brand-blue mb-1">100</span>
-              <span className="text-[10px] text-slate-400 font-semibold">Min. Increment</span>
-           </div>
-
-           <div className="px-6 flex flex-col items-center justify-center min-w-max text-left">
-              <span className="font-bold text-brand-blue mb-1">{bids.length || 130}</span>
-              <span className="text-[10px] text-slate-400 font-semibold">Total Bids</span>
-           </div>
-
-           <div className="px-6 flex flex-col items-center justify-center min-w-max text-left">
-              <span className="font-bold text-brand-blue mb-1">379831</span>
-              <span className="text-[10px] text-slate-400 font-semibold">Lot No.</span>
-           </div>
-
-           <div className="px-6 flex flex-col items-center justify-center min-w-max text-left">
-              <span className="font-bold text-brand-blue mb-1">10,878 K.M</span>
-              <span className="text-[10px] text-slate-400 font-semibold">Odometer</span>
-           </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-           {/* LEFT CONTENT */}
-           <div className="lg:col-span-2 space-y-10">
-              
-              <div className="bg-white">
-                 <h3 className="text-brand-blue font-bold text-lg mb-2 inline-block relative">
-                   Description
-                   <div className="absolute -bottom-2 left-0 w-8 h-[3px] bg-brand-orange"></div>
-                 </h3>
-                 <div className="mt-8 text-slate-500 text-sm leading-relaxed space-y-4">
-                    <p>Lorem ipsum dolor sit amet consectetur. Duis ac sodales vulputate dolor volutpat ac. Turpis ut neque eu adipiscing nibh nunc gravida. Ipsum at feugiat id dui elementum nibh nec suspendisse. Ut sapien metus elementum tincidunt euismod.</p>
-                    <p>In est eget turpis nulla leo amet arcu. Consequat viverra erat pellentesque ut non placerat placerat amet vitae. Lobortis velit senectus blandit pellentesque viverra augue dolor orci. Odio leo in et in. Ac purus morbi ac vulputate amet. Ut maecenas leo venenatis aliquet a fringilla quam varius pellentesque.</p>
-                 </div>
-              </div>
-
-              {/* Top Bidder */}
-              <div className="rounded-md overflow-hidden bg-white shadow-sm border border-slate-100">
-                 <div className="bg-brand-blue text-white px-6 py-3">
-                    <h3 className="font-bold text-sm">Top Bidder</h3>
-                 </div>
-                 <div className="p-6 bg-brand-lightest/40 flex flex-col md:flex-row gap-6 items-center md:items-start text-sm">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Top Bidder" className="w-20 h-20 rounded-full border-2 border-white shadow-sm" />
-                    
-                    <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 w-full md:mt-2">
-                       <div className="flex items-center">
-                          <span className="font-bold text-brand-dark w-32">Full Name</span>
-                          <span className="text-slate-500">Lionel Messi</span>
-                       </div>
-                       <div className="flex items-center">
-                          <span className="font-bold text-brand-dark w-16">Email</span>
-                          <span className="text-slate-500">messi10@email.com</span>
-                       </div>
-                       <div className="flex items-center">
-                          <span className="font-bold text-brand-dark w-32">Mobile Number</span>
-                          <span className="text-slate-500">1234567890</span>
-                       </div>
-                       <div className="flex items-center">
-                          <span className="font-bold text-brand-dark w-24">Nationality</span>
-                          <span className="text-slate-500">Argentina</span>
-                       </div>
-                       <div className="flex items-center">
-                          <span className="font-bold text-brand-dark w-32">ID Type</span>
-                          <span className="text-slate-500">Pakistani</span>
-                       </div>
-                    </div>
-                 </div>
-              </div>
-           </div>
-
-           {/* RIGHT CONTENT */}
-           <div className="space-y-8">
-              
-              {/* Bid Form */}
-              <div className="bg-brand-lightest/50 p-6 rounded-md shadow-sm border border-brand-lightest">
-                 <div className="flex justify-between items-center text-sm font-semibold text-brand-dark mb-4">
-                    <div>
-                      <p>$20,000</p>
-                      <p className="text-[10px] text-slate-500">Bid Starts From</p>
-                    </div>
-                    <div className="text-right">
-                      <p>$20,000</p>
-                      <p className="text-[10px] text-slate-500">Current Bid</p>
-                    </div>
-                 </div>
-                 
-                 <div className="relative mb-8 mt-2 h-2 bg-slate-200 rounded-full">
-                    <div className="absolute top-0 left-0 h-full w-[30%] bg-brand-blue rounded-full"></div>
-                    <div className="absolute top-1/2 -translate-y-1/2 left-[30%] w-4 h-4 bg-white border-4 border-brand-blue rounded-full shadow"></div>
-                 </div>
-
-                 <div className="flex items-center justify-between mb-8">
-                    <div>
-                      <p className="text-brand-blue font-bold mb-1">130</p>
-                      <p className="text-[10px] text-slate-500 font-semibold">Bid Placed</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                       <button 
-                         onClick={() => setBidAmount(prev => Math.max(car.price, prev - 100))}
-                         className="w-8 h-8 rounded bg-white border border-slate-200 flex items-center justify-center text-brand-blue shadow-sm"
-                       >
-                         <Minus size={16} />
-                       </button>
-                       <input 
-                         type="text" 
-                         value={`$${bidAmount.toLocaleString()}`} 
-                         readOnly 
-                         className="w-24 px-2 py-1.5 text-center text-brand-blue font-bold border border-brand-light rounded bg-white"
-                       />
-                       <button 
-                         onClick={() => setBidAmount(prev => prev + 100)}
-                         className="w-8 h-8 rounded bg-white border border-slate-200 flex items-center justify-center text-brand-blue shadow-sm"
-                       >
-                         <Plus size={16} />
-                       </button>
-                    </div>
-                 </div>
-
-                 {car.status === 'active' ? (
-                   <button 
-                     onClick={handlePlaceBid}
-                     className="w-full bg-brand-blue hover:bg-brand-dark text-white font-bold py-3 text-sm rounded shadow-sm transition-colors"
-                   >
-                     Submit A Bid
-                   </button>
-                 ) : (
-                   <button 
-                     onClick={() => router.push(`/payment/${car._id}`)}
-                     className="w-full bg-slate-900 border border-slate-900 text-white font-bold py-3 text-sm rounded shadow-sm hover:bg-black transition-colors"
-                   >
-                     Proceed to Payment
-                   </button>
-                 )}
-              </div>
-
-              {/* Bidders List */}
-              <div className="rounded-md overflow-hidden bg-brand-lightest/20 shadow-sm border border-slate-100">
-                 <div className="bg-brand-blue text-white px-6 py-4">
-                    <h3 className="font-bold text-sm">Bidders List</h3>
-                 </div>
-                 <div className="p-4 space-y-3">
-                    {bids.length > 0 ? (
-                       bids.slice(0, 4).map((bid, i) => (
-                         <div key={i} className="flex justify-between items-center py-2 border-b border-brand-lightest text-sm">
-                           <span className="text-slate-600">{i === 0 ? 'Top Bidder' : `Bidder ${i + 1}`}</span>
-                           <span className="font-bold text-brand-blue">${bid.amount.toLocaleString()}</span>
-                         </div>
-                       ))
-                    ) : (
-                       <>
-                         <div className="flex justify-between items-center py-2 border-b border-brand-lightest text-sm">
-                           <span className="text-slate-600">Bidder 1</span>
-                           <span className="font-bold text-brand-blue">$ 18,000</span>
-                         </div>
-                         <div className="flex justify-between items-center py-2 border-b border-brand-lightest text-sm">
-                           <span className="text-slate-600">Bidder 2</span>
-                           <span className="font-bold text-brand-blue">$ 16,500</span>
-                         </div>
-                         <div className="flex justify-between items-center py-2 border-b border-brand-lightest text-sm">
-                           <span className="text-slate-600">Bidder 3</span>
-                           <span className="font-bold text-brand-blue">$ 16,000</span>
-                         </div>
-                         <div className="py-2 text-slate-400">...</div>
-                       </>
-                    )}
-                 </div>
-              </div>
-
-           </div>
-        </div>
-
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

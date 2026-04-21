@@ -29,4 +29,7 @@ export declare class BidsService {
     } & {
         id: string;
     })[]>;
+    getCarById(carId: string): Promise<import("../cars/schemas/car.schema").CarDocument>;
+    payForCar(carId: string): Promise<import("../cars/schemas/car.schema").CarDocument>;
+    updateShippingStatus(carId: string, status: string): Promise<import("../cars/schemas/car.schema").CarDocument>;
 }

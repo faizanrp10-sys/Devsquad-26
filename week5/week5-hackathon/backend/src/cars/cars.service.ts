@@ -44,4 +44,28 @@ export class CarsService {
   async findBySeller(userId: string): Promise<CarDocument[]> {
     return this.carModel.find({ seller: userId }).exec();
   }
+
+  async payForCar(id: string): Promise<CarDocument> {
+    const car = await this.carModel.findByIdAndUpdate(
+      id,
+      { 
+        shippingStatus: 'ready_for_shipping',
+        winningDate: new Date(),
+        lotNumber: `LOT-${Math.floor(Math.random() * 900000) + 100000}`
+      },
+      { new: true }
+    );
+    if (!car) throw new NotFoundException('Car not found');
+    return car as CarDocument;
+  }
+
+  async updateShippingStatus(id: string, shippingStatus: string): Promise<CarDocument> {
+    const update: any = { shippingStatus };
+    if (shippingStatus === 'delivered') {
+      update.status = 'completed';
+    }
+    const car = await this.carModel.findByIdAndUpdate(id, update, { new: true });
+    if (!car) throw new NotFoundException('Car not found');
+    return car as CarDocument;
+  }
 }

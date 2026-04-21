@@ -4,6 +4,6 @@ export declare class CarsController {
     constructor(carsService: CarsService);
     getAllCars(query: any): Promise<import("./schemas/car.schema").CarDocument[]>;
     getCarById(id: string): Promise<import("./schemas/car.schema").CarDocument>;
-    createCar(req: any, body: any, images: Array<Express.Multer.File>): Promise<import("./schemas/car.schema").CarDocument>;
+    createCar(req: any, body: any, images: any[]): Promise<import("./schemas/car.schema").CarDocument>;
     getMyCars(req: any): Promise<import("./schemas/car.schema").CarDocument[]>;
 }

@@ -33,7 +33,7 @@ let CarsController = class CarsController {
     createCar(req, body, images) {
         const carData = {
             ...body,
-            images: images ? images.map(f => `uploads/${f.filename}`) : [],
+            images: images ? images.map((f) => `uploads/${f.filename}`) : [],
         };
         return this.carsService.create(carData, req.user.userId);
     }

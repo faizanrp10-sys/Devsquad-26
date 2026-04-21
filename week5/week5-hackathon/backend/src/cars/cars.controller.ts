@@ -35,10 +35,10 @@ export class CarsController {
       }),
     }),
   )
-  createCar(@Request() req, @Body() body: any, @UploadedFiles() images: Array<Express.Multer.File>) {
+  createCar(@Request() req, @Body() body: any, @UploadedFiles() images: any[]) {
     const carData = {
       ...body,
-      images: images ? images.map(f => `uploads/${f.filename}`) : [],
+      images: images ? images.map((f: any) => `uploads/${f.filename}`) : [],
     };
     return this.carsService.create(carData, req.user.userId);
   }

@@ -56,7 +56,7 @@ export default function ProfilePage() {
       // Also update Redux store
       if (user && user.wishlist) {
         const newWishlist = user.wishlist.filter((item: any) => 
-          (typeof item === 'string' ? item : item._id) !== carId
+          (typeof item === 'string' ? item : item?._id) !== carId
         );
         dispatch(updateUser({ wishlist: newWishlist }));
       }
@@ -317,7 +317,7 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {myBids.length > 0 ? myBids.map((bid: any, i) => {
                   const carIdMatch = bid.car?._id || bid.car || bid.carId;
-                  const car = allCars.find((c: any) => String(c._id) === String(carIdMatch)) || bid.car || {
+                  const car = allCars.find((c: any) => String(c?._id) === String(carIdMatch)) || bid.car || {
                       make: 'Unknown', model: 'Car', price: 0, images: [], _id: carIdMatch, status: 'ended'
                   };
                   return (

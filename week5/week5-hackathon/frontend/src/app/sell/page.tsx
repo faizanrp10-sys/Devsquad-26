@@ -42,7 +42,9 @@ export default function SellCarPage() {
       fd.append('mileage', formData.mileage);
       fd.append('description', formData.features);
       fd.append('bodyType', 'Sedan');
-      fd.append('userId', user._id);
+      if (user?._id) {
+        fd.append('userId', user._id);
+      }
       images.forEach((img) => fd.append('images', img));
 
       await axiosInstance.post('/cars', fd, {
@@ -168,6 +170,7 @@ export default function SellCarPage() {
                 <div className="relative">
                   <select name="model" onChange={handleChange} className="w-full border border-border rounded px-4 py-2.5 text-sm text-text-dark focus:outline-none focus:border-primary appearance-none bg-white">
                     <option value="">All Models</option>
+                    <option value="">No Models</option>
                   </select>
                   <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
                 </div>

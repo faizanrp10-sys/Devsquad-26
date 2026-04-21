@@ -107,14 +107,14 @@ export default function LiveAuctionDetail({ params }: { params: Promise<{ id: st
     if (!isAuthenticated) return router.push('/login');
 
     const isInWishlist = user?.wishlist?.some((item: any) => 
-      (typeof item === 'string' ? item : item._id) === id
+      (typeof item === 'string' ? item : item?._id) === id
     );
 
     try {
       if (isInWishlist) {
         await axiosInstance.delete(`/users/wishlist/${id}`);
         const newWishlist = user.wishlist.filter((item: any) => 
-          (typeof item === 'string' ? item : item._id) !== id
+          (typeof item === 'string' ? item : item?._id) !== id
         );
         dispatch(updateUser({ wishlist: newWishlist }));
       } else {
@@ -171,11 +171,11 @@ export default function LiveAuctionDetail({ params }: { params: Promise<{ id: st
           <button 
             onClick={handleToggleWishlist}
             className={`transition-colors ${
-            user?.wishlist?.some((item: any) => (typeof item === 'string' ? item : item._id) === id)
+            user?.wishlist?.some((item: any) => (typeof item === 'string' ? item : item?._id) === id)
             ? 'text-accent' 
             : 'text-white/70 hover:text-accent'
           }`}>
-            <Star size={20} fill={user?.wishlist?.some((item: any) => (typeof item === 'string' ? item : item._id) === id) ? "currentColor" : "none"} />
+            <Star size={20} fill={user?.wishlist?.some((item: any) => (typeof item === 'string' ? item : item?._id) === id) ? "currentColor" : "none"} />
           </button>
         </div>
 

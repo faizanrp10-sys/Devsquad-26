@@ -61,14 +61,14 @@ export default function AuctionsList() {
     if (!isAuthenticated) return router.push('/login');
 
     const isInWishlist = user?.wishlist?.some((item: any) => 
-      (typeof item === 'string' ? item : item._id) === carId
+      (typeof item === 'string' ? item : item?._id) === carId
     );
 
     try {
       if (isInWishlist) {
         await axiosInstance.delete(`/users/wishlist/${carId}`);
         const newWishlist = user.wishlist.filter((item: any) => 
-          (typeof item === 'string' ? item : item._id) !== carId
+          (typeof item === 'string' ? item : item?._id) !== carId
         );
         dispatch(updateUser({ wishlist: newWishlist }));
       } else {
@@ -161,12 +161,12 @@ export default function AuctionsList() {
                             <button 
                               onClick={() => handleToggleWishlist(car._id)}
                               className={`transition-colors ${
-                                user?.wishlist?.some((item: any) => (typeof item === 'string' ? item : item._id) === car._id)
+                                user?.wishlist?.some((item: any) => (typeof item === 'string' ? item : item?._id) === car._id)
                                 ? 'text-accent' 
                                 : 'text-text-light hover:text-accent'
                               }`}
                             >
-                              <Star size={18} fill={user?.wishlist?.some((item: any) => (typeof item === 'string' ? item : item._id) === car._id) ? "currentColor" : "none"} />
+                              <Star size={18} fill={user?.wishlist?.some((item: any) => (typeof item === 'string' ? item : item?._id) === car._id) ? "currentColor" : "none"} />
                             </button>
                           </div>
                           <div className="flex items-center space-x-1 my-1">

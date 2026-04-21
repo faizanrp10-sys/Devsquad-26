@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { API_URL as BASE_URL } from '../lib/axios';
 
-const API_URL = 'http://localhost:3001/cars';
+const API_URL = `${BASE_URL}/cars`;
 
 interface CarState {
   cars: any[];

@@ -163,7 +163,7 @@ __decorate([
 exports.BidGateway = BidGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {
-            origin: 'http://localhost:3000',
+            origin: true,
             credentials: true
         },
         transports: ['polling', 'websocket']

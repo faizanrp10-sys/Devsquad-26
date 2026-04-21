@@ -133,7 +133,7 @@ export default function LiveAuctionDetail({ params }: { params: Promise<{ id: st
     </div>
   );
 
-  const images = [...(car.images || [])].map((img: string) => img.startsWith('http') ? img : `http://localhost:3001/${img}`);
+  const images = [...(car.images || [])].map((img: string) => img.startsWith('http') ? img : `${API_URL}/${img}`);
   if (images.length === 0) images.push('https://via.placeholder.com/800x450');
 
   const isWinner = car.status === 'ended' && bids[0]?.userId === user?._id;

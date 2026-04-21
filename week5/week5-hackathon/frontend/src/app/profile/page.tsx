@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../lib/axios';
+import axiosInstance, { API_URL } from '../../lib/axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import { updateUser } from '../../store/userSlice';
@@ -146,21 +146,120 @@ export default function ProfilePage() {
                           <p className="text-sm font-medium text-text-dark">{user?.email || 'N/A'}</p>
                         </div>
                         <div>
-                          <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Mobile</p>
+                          <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Mobile Number</p>
                           <p className="text-sm font-medium text-text-dark">{user?.phone || '1234567890'}</p>
                         </div>
                         <div>
                           <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Nationality</p>
-                          <p className="text-sm font-medium text-text-dark">UAE</p>
+                          <p className="text-sm font-medium text-text-dark">India</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">ID Type</p>
+                          <p className="text-sm font-medium text-text-dark">India</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">ID Number</p>
+                          <p className="text-sm font-medium text-text-dark">345203</p>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Other standard sections... */}
+                {/* Password Section */}
+                <div className="border border-border rounded-lg overflow-hidden shadow-sm">
+                  <div className="bg-primary text-white px-6 py-3 flex items-center justify-between">
+                    <span className="font-bold text-xs uppercase tracking-widest">Password</span>
+                    <button className="text-white/70 hover:text-white"><Edit size={16} /></button>
+                  </div>
+                  <div className="p-6">
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Password</p>
+                        <p className="text-sm font-medium text-text-dark">••••••••</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Address Section */}
+                <div className="border border-border rounded-lg overflow-hidden shadow-sm">
+                  <div className="bg-primary text-white px-6 py-3 flex items-center justify-between">
+                    <span className="font-bold text-xs uppercase tracking-widest">Address</span>
+                    <button className="text-white/70 hover:text-white"><Edit size={16} /></button>
+                  </div>
+                  <div className="p-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4">
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Country</p>
+                        <p className="text-sm font-medium text-text-dark">India</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">City</p>
+                        <p className="text-sm font-medium text-text-dark">India</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Address 1</p>
+                        <p className="text-sm font-medium text-text-dark">India</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Address 2</p>
+                        <p className="text-sm font-medium text-text-dark">{user?.name || 'Manish Sharma'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Land Line Number</p>
+                        <p className="text-sm font-medium text-text-dark">345203</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">P.O Box</p>
+                        <p className="text-sm font-medium text-text-dark">345203</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Traffic File Information Section */}
+                <div className="border border-border rounded-lg overflow-hidden shadow-sm">
+                  <div className="bg-primary text-white px-6 py-3 flex items-center justify-between">
+                    <span className="font-bold text-xs uppercase tracking-widest">Traffic File Information</span>
+                    <button className="text-white/70 hover:text-white"><Edit size={16} /></button>
+                  </div>
+                  <div className="p-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4">
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Traffic Information Type</p>
+                        <p className="text-sm font-medium text-text-dark">••••••</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Plate State</p>
+                        <p className="text-sm font-medium text-text-dark"></p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Traffic File Number</p>
+                        <p className="text-sm font-medium text-text-dark">{user?.name || 'Manish Sharma'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Plate Code</p>
+                        <p className="text-sm font-medium text-text-dark"></p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Plate Number</p>
+                        <p className="text-sm font-medium text-text-dark">{user?.name || 'Manish Sharma'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Driver License Number</p>
+                        <p className="text-sm font-medium text-text-dark"></p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Issue City</p>
+                        <p className="text-sm font-medium text-text-dark"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
+
 
             {/* MY CARS */}
             {activeTab === 'My Cars' && (
@@ -173,7 +272,7 @@ export default function ProfilePage() {
                       </div>
                       <div className="h-44 px-4 pb-2 overflow-hidden bg-white">
                         <img
-                         src={car.images?.[0] ? `http://localhost:3001/${car.images[0]}` : 'http://localhost:3001/hero_section_bg_img.jpg'}
+                         src={car.images?.[0] ? `${API_URL}/${car.images[0]}` : `${API_URL}/hero_section_bg_img.jpg`}
                           alt={`${car.make} ${car.model}`}
                           className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform"
                         />
@@ -232,7 +331,7 @@ export default function ProfilePage() {
                         </div>
                         <div className="h-44 px-4 pb-2 overflow-hidden bg-white">
                           <img
-                            src={car.images?.[0] ? (car.images[0].startsWith('http') ? car.images[0] : `http://localhost:3001/${car.images[0]}`) : 'http://localhost:3001/hero_section_bg_img.jpg'}
+                            src={car.images?.[0] ? (car.images[0].startsWith('http') ? car.images[0] : `${API_URL}/${car.images[0]}`) : `${API_URL}/hero_section_bg_img.jpg`}
                             alt={`${car.make} ${car.model}`}
                             className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform"
                           />
@@ -296,7 +395,7 @@ export default function ProfilePage() {
                         </div>
                         <div className="h-44 px-4 pb-2 overflow-hidden bg-white">
                           <img
-                            src={car.images?.[0] ? (car.images[0].startsWith('http') ? car.images[0] : `http://localhost:3001/${car.images[0]}`) : 'http://localhost:3001/hero_section_bg_img.jpg'}
+                            src={car.images?.[0] ? (car.images[0].startsWith('http') ? car.images[0] : `${API_URL}/${car.images[0]}`) : `${API_URL}/hero_section_bg_img.jpg`}
                             alt={`${car.make} ${car.model}`}
                             className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform"
                           />

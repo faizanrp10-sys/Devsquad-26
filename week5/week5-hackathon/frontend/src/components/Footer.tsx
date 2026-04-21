@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Phone, Mail, MapPin } from 'lucide-react';
+import { API_URL } from '../lib/axios';
 
 export default function Footer() {
   return (
@@ -12,7 +13,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div>
             <Link href="/" className="flex items-center">
-             <img src="http://localhost:3001/logo.png" alt="Car Deposit" className="h-10" />
+             <img src={`${API_URL}/logo.png`} alt="Car Deposit" className="h-10" />
           </Link>
             <p className="text-sm text-white/60 leading-relaxed mb-8">
               Lorem ipsum dolor sit amet consectetur. Mauris eu convallis proin turpis pretium donec orci semper. Sit suscipit lacus cras commodo in lectus sed egestas. Mattis egestas sit viverra pretium tincidunt libero.

@@ -95,7 +95,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-             <img src="http://localhost:3001/logo.png" alt="Car Deposit" className="h-10" />
+             <img src={`${API_URL}/logo.png`} alt="Car Deposit" className="h-10" />
           </Link>
 
           {/* Nav Links */}

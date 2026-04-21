@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { RootState } from '../store/store';
 import { updateUser } from '../store/userSlice';
-import axiosInstance from '../lib/axios';
+import axiosInstance, { API_URL } from '../lib/axios';
 
 interface CarCardProps {
   car: any;
@@ -75,7 +75,7 @@ export default function CarCard({ car }: CarCardProps) {
         {/* Image */}
         <div className="h-44 px-4 pb-2 overflow-hidden">
           <img
-            src={car.images?.[0] ? (car.images[0].startsWith('http') ? car.images[0] : `http://localhost:3001/${car.images[0]}`) : 'http://localhost:3001/hero_section_bg_img.jpg'}
+            src={car.images?.[0] ? (car.images[0].startsWith('http') ? car.images[0] : `${API_URL}/${car.images[0]}`) : `${API_URL}/hero_section_bg_img.jpg`}
             alt={`${car.make} ${car.model}`}
             className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
           />

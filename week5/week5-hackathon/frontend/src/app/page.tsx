@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
-import axiosInstance from '../lib/axios';
+import axiosInstance, { API_URL } from '../lib/axios';
 import CarCard from '../components/CarCard';
 import { resolveCarDesign } from '../lib/car-utils';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -39,7 +39,7 @@ export default function Home() {
       <section className="relative h-[650px] flex items-center overflow-hidden">
         {/* Background Image from Backend */}
         <img 
-          src="http://localhost:3001/hero_section_bg_img.jpg"
+          src={`${API_URL}/hero_section_bg_img.jpg`}
           alt="Hero Background"
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 z-0"
         />

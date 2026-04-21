@@ -16,7 +16,7 @@ import { UseGuards } from '@nestjs/common';
 
 @WebSocketGateway({ 
   cors: { 
-    origin: 'http://localhost:3000', 
+    origin: true, 
     credentials: true 
   },
   transports: ['polling', 'websocket']

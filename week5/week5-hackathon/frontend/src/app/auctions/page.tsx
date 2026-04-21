@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../lib/axios';
+import axiosInstance, { API_URL } from '../../lib/axios';
 import Link from 'next/link';
 import { Star, ChevronDown, ChevronRight, ChevronLeft, Search } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -147,7 +147,7 @@ export default function AuctionsList() {
                           </span>
                         )}
                         <img
-                          src={car.images?.[0] ? `http://localhost:3001/${car.images[0]}` : 'https://via.placeholder.com/200x140'}
+                          src={car.images?.[0] ? `${API_URL}/${car.images[0]}` : 'https://via.placeholder.com/200x140'}
                           alt={`${car.make} ${car.model}`}
                           className="w-full h-full object-contain p-2"
                         />

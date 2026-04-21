@@ -14,6 +14,7 @@ export declare class Car {
     endDate?: Date;
     seller: Types.ObjectId | User;
     bodyType: string;
+    mileage: number;
     images: string[];
     description: string;
     winner?: Types.ObjectId | User;
@@ -137,6 +138,15 @@ export declare const CarSchema: import("mongoose").Schema<Car, import("mongoose"
         id: string;
     }> | undefined;
     bodyType?: import("mongoose").SchemaDefinitionProperty<string, Car, Document<unknown, {}, Car, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Car & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    mileage?: import("mongoose").SchemaDefinitionProperty<number, Car, Document<unknown, {}, Car, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Car & {
         _id: Types.ObjectId;

@@ -42,6 +42,9 @@ export class Car {
   @Prop({ required: true })
   bodyType: string; // e.g. sedan, sports, hatchback, etc.
 
+  @Prop({ required: true, default: 0 })
+  mileage: number;
+
   @Prop({ type: [String], default: [] })
   images: string[];
 

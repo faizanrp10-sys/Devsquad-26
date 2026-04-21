@@ -23,17 +23,26 @@ let CarsService = class CarsService {
         this.carModel = carModel;
     }
     async create(createData, userId) {
-        const carObject = {
-            ...createData,
-            seller: userId,
-            price: Number(createData.price),
-            year: Number(createData.year),
-            mileage: Number(createData.mileage),
-            auctionEndTime: createData.auctionEndTime ? new Date(createData.auctionEndTime) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            status: 'active',
-        };
-        const newCar = new this.carModel(carObject);
-        return newCar.save();
+        try {
+            const carObject = {
+                ...createData,
+                seller: userId,
+                price: Number(createData.price) || 0,
+                year: Number(createData.year) || new Date().getFullYear(),
+                mileage: Number(createData.mileage) || 0,
+                auctionEndTime: createData.auctionEndTime ? new Date(createData.auctionEndTime) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+                status: 'active',
+            };
+            console.log('Attempting to create car:', { ...carObject, images: carObject.images?.length });
+            const newCar = new this.carModel(carObject);
+            const savedCar = await newCar.save();
+            console.log('Car created successfully:', savedCar._id);
+            return savedCar;
+        }
+        catch (error) {
+            console.error('Error creating car in service:', error);
+            throw error;
+        }
     }
     async findAll(query) {
         const filter = {};

@@ -24,7 +24,10 @@ export class CarsController {
   @UseInterceptors(
     FilesInterceptor('images', 10, {
       storage: diskStorage({
-        destination: './public/uploads',
+        destination: (req, file, cb) => {
+          const uploadPath = join(process.cwd(), 'public', 'uploads');
+          cb(null, uploadPath);
+        },
         filename: (req, file, cb) => {
           const randomName = Array(32)
             .fill(null)

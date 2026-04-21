@@ -25,6 +25,7 @@ let Car = class Car {
     endDate;
     seller;
     bodyType;
+    mileage;
     images;
     description;
     winner;
@@ -78,6 +79,10 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], Car.prototype, "bodyType", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true, default: 0 }),
+    __metadata("design:type", Number)
+], Car.prototype, "mileage", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: [String], default: [] }),
     __metadata("design:type", Array)

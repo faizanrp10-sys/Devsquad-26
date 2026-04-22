@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Default base URL for NestJS backend
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://prolific-empathy-production-e8a9.up.railway.app';
 
 const axiosInstance = axios.create({
   baseURL: API_URL,

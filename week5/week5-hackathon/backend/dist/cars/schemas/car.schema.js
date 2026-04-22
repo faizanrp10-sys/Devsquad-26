@@ -36,7 +36,7 @@ __decorate([
     __metadata("design:type", String)
 ], Car.prototype, "make", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({ required: false, default: 'other' }),
     __metadata("design:type", String)
 ], Car.prototype, "model", void 0);
 __decorate([

@@ -9,7 +9,7 @@ export class Car {
   @Prop({ required: true })
   make: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 'other' })
   model: string;
 
   @Prop({ required: true })
@@ -50,7 +50,7 @@ export class Car {
 
   @Prop({ default: '' })
   description: string;
-  
+
   @Prop({ type: Types.ObjectId, ref: 'User' })
   winner?: Types.ObjectId | User;
 }

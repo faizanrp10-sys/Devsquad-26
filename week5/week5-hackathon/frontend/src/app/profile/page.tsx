@@ -34,9 +34,10 @@ export default function ProfilePage() {
     try {
       const carsRes = await axiosInstance.get('/cars');
       const rawCars = carsRes.data;
-      
       setAllCars(rawCars);
-      setMyCars(rawCars.filter((c: any) => c.userId === user?._id));
+      
+      const myCarsRes = await axiosInstance.get('/cars/user/my-cars');
+      setMyCars(myCarsRes.data);
 
       const bidsRes = await axiosInstance.get('/bids/user/my-bids');
       setMyBids(bidsRes.data);
@@ -272,7 +273,7 @@ export default function ProfilePage() {
                       </div>
                       <div className="h-44 px-4 pb-2 overflow-hidden bg-white">
                         <img
-                         src={car.images?.[0] ? `${API_URL}/${car.images[0]}` : `${API_URL}/hero_section_bg_img.jpg`}
+                          src={car.images?.[0] ? (car.images[0].startsWith('http') ? car.images[0] : `${API_URL}/${car.images[0]}`) : `${API_URL}/hero_section_bg_img.jpg`}
                           alt={`${car.make} ${car.model}`}
                           className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform"
                         />
